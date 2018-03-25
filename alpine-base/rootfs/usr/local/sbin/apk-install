@@ -1,0 +1,5 @@
+#!/bin/sh
+
+# Add PACKAGEs to 'world' and install (or upgrade) them, while ensuring that all dependencies are met
+# --no-cache : Read uncached index from network
+apk add --no-cache ${@}

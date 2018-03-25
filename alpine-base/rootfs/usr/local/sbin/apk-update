@@ -1,0 +1,5 @@
+#!/bin/sh
+
+# Update repository indexes from all remote repositories
+# --update-cache : Update the repository cache
+apk update --update-cache ${@}

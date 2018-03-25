@@ -1,0 +1,122 @@
+#!/bin/sh
+
+#
+# This is the runit manager scripts overlay. It requires runit package being installed.
+#
+
+# set -e : Exit the script if any statement returns a non-true return value.
+# set -u : Exit the script when using uninitialised variable.
+set -eu
+
+# Re-define PATH
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+# Shutdown function called on (Ctrl+C)
+_shutdown() {
+
+    # Running post-daemon clearing tasks
+    /etc/runit/3
+
+    # shutdown runsvdir :
+    # http://smarden.org/runit/runsvdir.8.html
+    echo  "-- Shutdown runsvdir PID ${_runsvdirpid}"
+    # Get runsvdir process id
+    _runsvdirpid=$(getpidsbyname runsvdir)
+    # Kill it
+    kill -HUP $_runsvdirpid
+    # Wait for it to be killed
+    waiton $_runsvdirpid 2>/dev/null
+
+    # Exit function - 128 + 15 -- SIGTERM
+    exit 143;
+}
+
+# Just to make sure that runit will start
+\rm -f /etc/runit/stopall
+
+# Run pre-daemon tasks
+/etc/runit/1
+
+# Include envvars if it exist
+[ -r /etc/envvars ] && . /etc/envvars
+
+# Start services in /etc/service
+if [ -e /etc/runit/runit ] && [ ! -e /etc/runit/stopall ]; then
+    echo "-- ------------------------------------------------------------------"
+    echo "-- Start the following services under runit supervisor"
+    echo "-- ------------------------------------------------------------------"
+    if [ -n "$(ls -A /etc/service.d)" ]; then
+        for _dir in /etc/service.d/*; do
+            if [ -d  /etc/service/$(basename ${_dir}) ]; then
+                echo "--   [x] $(basename ${_dir})"
+            else
+                echo "--   [ ] $(basename ${_dir})"
+            fi
+        done
+    fi
+    echo "-- ------------------------------------------------------------------"
+    # Start all daemons
+    echo "-- Booting runit daemon ..."
+    /etc/runit/2 &
+    # Get runsvdir process id
+    _runsvdirpid=$!
+else
+    # Get runsvdir process id
+    _runsvdirpid=$(getpidsbyname runsvdir)
+fi
+
+echo "-- Started runsvdir with PID $_runsvdirpid"
+
+# Wait for all process to start correctly
+echo "-- waiting for processes to start ..."
+# Sleep Interval is NSTEP=0.2 seconds per step/dot
+NSTEP=0.2
+NSV=$(ls -1 /etc/service | wc -l)
+RUNSVWAITSEC=${RUNSVWAITSEC:=2}
+if isdigit ${RUNSVWAITSEC} 2>/dev/null && [ ${RUNSVWAITSEC} -ge 1 ]; then
+   echo "-- Waiting ${RUNSVWAITSEC} seconds for services processes to stablize ..."
+   NTOT=$(ecalc ${RUNSVWAITSEC}/${NSTEP})
+else
+   # Give each service 2 seconds to start up
+   echo "-- Waiting $(ecalc ${NSV}*2) seconds for services processes to stablize ..."
+   NTOT=$(ecalc ${NSV}*2/${NSTEP})
+fi
+N=0
+printf "-- ";
+while [ ${N} -le ${NTOT} ]; do
+   sleep ${NSTEP};
+   N=$(ecalc ${N}+1);
+   printf ".";
+done
+
+echo ""
+echo "-- ------------------------------------------------------------------"
+echo "-- List all supervised services status ..."
+echo "-- ------------------------------------------------------------------"
+for _srv in $(ls -1 /etc/service); do
+   sv status ${_srv}
+done
+echo "-- ------------------------------------------------------------------"
+
+# Catch shutdown signals :
+# - SIGTERM : Terminates a process immediately.
+# - SIGINT: Interrupts a process.
+# - SIGHUP: Hangs up a process when the controlling terminal is disconnected.
+#
+# more info on signals : http://programmergamer.blogspot.fr/2013/05/clarification-on-sigint-sigterm-sigkill.html
+# Trapping signals in Docker containers : https://medium.com/@gchudnov/trapping-signals-in-docker-containers-7a57fdda7d86
+# Container does not catch signals and exit (Ctrl+C) : https://github.com/docker-library/mysql/issues/47#issuecomment-147397851
+echo "-- All processes are running properly, waiting for termination signal (Ctrl+C) ..."
+trap _shutdown SIGTERM SIGINT SIGHUP
+
+
+# A signal emitted while waiting will make the wait command return code > 128
+# Let's wrap it in a loop that doesn't end before the process is indeed stopped
+while kill -0 $_runsvdirpid > /dev/null 2>&1; do
+    wait
+done
+
+_shutdown
+
+unset NSTEP NSV NTOT N _runsvdirpid _dir
+unset -f _shutdown

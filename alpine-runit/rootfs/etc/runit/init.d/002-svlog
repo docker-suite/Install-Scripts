@@ -1,0 +1,31 @@
+#!/bin/sh
+
+#
+# Enable logs by service
+#
+
+# set -e : Exit the script if any statement returns a non-true return value.
+# set -u : Exit the script when using uninitialised variable.
+set -eu
+
+# Check if LOGGER is enable or not
+[ -z $LOGGER ] && return 0
+[ $LOGGER = "false" ] && return 0
+
+# LOGGER is enable
+echo "-- Preparing /etc/service.d/ services log folders and loggers ..."
+
+# Preparing services log folders and loggers
+if [ -n "$(ls -1 /etc/service.d)" ]; then
+    # Change internal field separator
+   IFS='
+   '
+   set -f
+    # Iterate all dirs in /etc/service.d
+   for _dir in $(ls -1 /etc/service.d); do
+       [ ! -d /etc/service.d/${_dir}/log ] && mkdir /etc/service.d/${_dir}/log 2>/dev/null
+       [ ! -e /etc/service.d/${_dir}/log/run ] && ln -sf /etc/runit/logger /etc/service.d/${_dir}/log/run 2>/dev/null
+   done
+fi
+
+unset _dir

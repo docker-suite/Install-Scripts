@@ -1,0 +1,29 @@
+#!/bin/sh
+
+#
+# Clean the directories before starting runit
+#
+
+# set -e : Exit the script if any statement returns a non-true return value.
+# set -u : Exit the script when using uninitialised variable.
+set -eu
+
+echo "-- Creating /etc/service directory ..."
+
+# Create /etc/service directory
+rm -rf /etc/service 2>/dev/null
+mkdir -p /etc/service
+
+# Remove all directory in /etc/service.d without a run file
+if [ -n "$(ls -A /etc/service.d)" ]; then
+    # Change internal field separator
+    IFS='
+    '
+    set -f
+    # Iterate all dirs in /etc/service.d
+    for _dir in $(find /etc/service.d -type d -mindepth 1 -maxdepth 1 -not -exec test -e '{}/run' \; -print); do
+        rm -rf ${_dir} 2>/dev/null
+    done
+fi
+
+unset _dir

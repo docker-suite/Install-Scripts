@@ -1,0 +1,28 @@
+#!/bin/sh
+
+# set -e : Exit the script if any statement returns a non-true return value.
+# set -u : Exit the script when using uninitialised variable.
+set -eu
+
+# Redirect STDERR to STDOUT
+exec 2>&1
+
+# Make environnement variables accessibles
+[ -r /etc/envvars ] && . /etc/envvars
+
+# Add crons to /etc/crontabs/root
+for _file in $(find /etc/crontabs -type f -not -iname root | sort); do
+    cat ${_file} >> /etc/crontabs/root
+    rm ${_file}
+done
+unset _file
+
+# Create cron log file
+mkdir -p /var/log/cron
+touch /var/log/cron/cron.log
+
+# start crond
+/usr/sbin/crond -f -l 2 -L /var/log/cron/cron.log
+
+# This exit code will be sent as the first parameter to the finish script
+exit 1

@@ -1,0 +1,45 @@
+#!/bin/sh
+
+# Initialisation tasks
+#
+# Each scripts in /etc/runit/init.d will be run before starting the services.
+# This is the good place to add all you initialisation scripts
+
+# set -e : Exit the script if any statement returns a non-true return value.
+# set -o pipefail : Check the exit code of pipeline's last command.
+# set -u : Exit the script when using uninitialised variable.
+set -euo pipefail
+
+echo "-- Starting ..."
+
+# Run every scripts in /etc/runit/init.d
+if [ -n "$(ls -A /etc/runit/init.d)" ]; then
+    echo "-- Running initialization scripts ..."
+    # Iterate throw all script in /etc/runit/init.d/
+    # and run them if the scripts are executable
+    # and if runit is not stoping
+    for _script in /etc/runit/init.d/*; do
+        if [ -x "${_script}" ] && [ ! -e /etc/runit/stopall ]; then
+            #echo "-- Running: ${_script}"
+            ${_script}
+            retval=$?
+            if [ ${retval} != 0 ]; then
+                echo >&2 "-- Failed to run ${_script} with return value: ${retval}"
+                if [ ${FAIL_MODE} -eq 1 ]; then
+                    touch /etc/runit/stopall
+                    exit 100
+                fi
+            fi
+        else
+            echo >&2 "-- Failed to run: ${_script}. Please chmod +x ${_script}"
+        fi
+    done
+fi
+
+# Create runit file:
+touch /etc/runit/runit
+# Create stopit file:
+touch /etc/runit/stopit
+chmod 0 /etc/runit/stopit
+
+unset _script

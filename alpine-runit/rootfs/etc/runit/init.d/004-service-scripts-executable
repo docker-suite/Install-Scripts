@@ -1,0 +1,8 @@
+#!/bin/sh
+
+#
+# Make sure runit scripts are executable
+#
+
+find /etc/service.d/ -type f -mindepth 2 -maxdepth 2 -iname "run" -exec chmod +x {} \;
+find /etc/service.d/ -type f -mindepth 2 -maxdepth 2 -iname "finish" -exec chmod +x {} \;

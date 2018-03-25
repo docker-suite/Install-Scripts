@@ -1,0 +1,8 @@
+#!/bin/sh
+
+# Upgrade currently installed packages to match repositories
+# --available : Resets versioned world dependencies, and changes to prefer
+#               replacing or downgrading packages (instead of holding them)
+#               if the currently installed package is no longer available
+#               from any repository
+apk upgrade --available ${@}

@@ -1,0 +1,27 @@
+#!/bin/sh
+
+#
+# Enable all services wich contain the file enable
+#
+
+# set -e : Exit the script if any statement returns a non-true return value.
+# set -u : Exit the script when using uninitialised variable.
+set -eu
+
+if [ -n "$(ls -A /etc/service.d)" ]; then
+    # Change internal field separator
+    IFS='
+    '
+    set -f
+    # Iterate all dirs in /etc/service.d containing the file enable
+    for _dir in $(find /etc/service.d -type d -mindepth 1 -maxdepth 1 -type d -exec test -e '{}/enable' \; -print); do
+        _servicename=$(basename ${_dir})
+        # However, this service should not also be disabled
+        if [ ! -e "/etc/service.d/${_servicename}/disable" ]; then
+            ln -s ${_dir} /etc/service/
+            echo "--   Enabling service: ${_servicename}"
+        fi
+    done
+fi
+
+unset _dir _servicename
