@@ -16,25 +16,25 @@ apk add jq
 mkdir -p /usr/local/bin
 mkdir -p /usr/local/sbin
 
-# Install gh-downloader
+# Add tools
 curl -s -o /usr/local/sbin/gh-downloader https://raw.githubusercontent.com/CraftShell/gh-downloader/master/gh-downloader.sh
-chmod +x /usr/local/sbin/gh-downloader
+curl -s -o /usr/local/sbin/templater https://raw.githubusercontent.com/CraftShell/templater/master/templater.sh
+curl -s -o /usr/local/sbin/wait-host https://raw.githubusercontent.com/CraftShell/wait-host/master/wait-host.sh
+curl -s -o /usr/local/bin/mvlink https://raw.githubusercontent.com/CraftShell/mvlink/master/mvlink.sh
 
-# Download files
+# Make them accessible and executable
+[ $(ls /usr/local/bin | wc -l) -gt 0 ] && chmod 0755 /usr/local/bin/*
+[ $(ls /usr/local/sbin | wc -l) -gt 0 ] && chmod 0755 /usr/local/sbin/*
+
+# Download alpine base files
 if [ -n "$GH_TOKEN" ]; then
     gh-downloader -T=$GH_TOKEN -u=craftdock -r=Install-Scripts -p=alpine-base/rootfs -o=/
 else
     gh-downloader -u=craftdock -r=Install-Scripts -p=alpine-base/rootfs -o=/
 fi
 
-# Add tools
-curl -s -o /usr/local/sbin/templater https://raw.githubusercontent.com/CraftShell/templater/master/templater.sh
-curl -s -o /usr/local/sbin/wait-host https://raw.githubusercontent.com/CraftShell/wait-host/master/wait-host.sh
-
-# Permissions
+# Make entrypoint accessible and executable
 chmod 0755 /entrypoint
-[ $(ls /usr/local/bin | wc -l) -gt 0 ] && chmod 0755 /usr/local/bin/*
-[ $(ls /usr/local/sbin | wc -l) -gt 0 ] && chmod 0755 /usr/local/sbin/*
 
 # Add packages
 apk-install --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ \
