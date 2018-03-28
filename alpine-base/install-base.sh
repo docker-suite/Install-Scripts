@@ -22,16 +22,16 @@ curl -s -o /usr/local/sbin/templater https://raw.githubusercontent.com/CraftShel
 curl -s -o /usr/local/sbin/wait-host https://raw.githubusercontent.com/CraftShell/wait-host/master/wait-host.sh
 curl -s -o /usr/local/bin/mvlink https://raw.githubusercontent.com/CraftShell/mvlink/master/mvlink.sh
 
-# Make them accessible and executable
-[ $(ls /usr/local/bin | wc -l) -gt 0 ] && chmod 0755 /usr/local/bin/*
-[ $(ls /usr/local/sbin | wc -l) -gt 0 ] && chmod 0755 /usr/local/sbin/*
-
 # Download alpine base files
 if [ -n "$GH_TOKEN" ]; then
-    gh-downloader -T=$GH_TOKEN -u=craftdock -r=Install-Scripts -p=alpine-base/rootfs -o=/
+    sh /usr/local/sbin/gh-downloader -T=$GH_TOKEN -u=craftdock -r=Install-Scripts -p=alpine-base/rootfs -o=/
 else
-    gh-downloader -u=craftdock -r=Install-Scripts -p=alpine-base/rootfs -o=/
+    sh /usr/local/sbin/gh-downloader -u=craftdock -r=Install-Scripts -p=alpine-base/rootfs -o=/
 fi
+
+# Make bin and sbin filesq accessible and executable
+[ $(ls /usr/local/bin | wc -l) -gt 0 ] && chmod 0755 /usr/local/bin/*
+[ $(ls /usr/local/sbin | wc -l) -gt 0 ] && chmod 0755 /usr/local/sbin/*
 
 # Make entrypoint accessible and executable
 chmod 0755 /entrypoint
