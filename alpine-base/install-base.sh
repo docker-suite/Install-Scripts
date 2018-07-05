@@ -29,7 +29,7 @@ else
     sh /usr/local/sbin/gh-downloader -u=craftdock -r=Install-Scripts -p=alpine-base/rootfs -o=/
 fi
 
-# Make bin and sbin filesq accessible and executable
+# Make bin and sbin files accessible and executable
 [ $(ls /usr/local/bin | wc -l) -gt 0 ] && chmod 0755 /usr/local/bin/*
 [ $(ls /usr/local/sbin | wc -l) -gt 0 ] && chmod 0755 /usr/local/sbin/*
 
