@@ -36,6 +36,12 @@ fi
 # Make entrypoint accessible and executable
 chmod 0755 /entrypoint
 
+# Create /etc/envvars file
+touch /etc/envvars
+
+# Make /etc/envvars accessible for every one
+chmod 666 /etc/envvars
+
 # Add packages
 apk-install --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ \
     `# curl: https://curl.haxx.se/` \
