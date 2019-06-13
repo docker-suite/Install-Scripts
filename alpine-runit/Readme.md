@@ -74,7 +74,6 @@ This example image contains:
 ## ![](https://github.com/docker-suite/artwork/raw/master/various/pin/png/pin_16.png) Credits
 Inspired from [runitshover](https://github.com/HowardMei/runitshover) and others runit images found on GitHub.
 
-
 [alpine]: http://alpinelinux.org/
 [runit]: http://smarden.org/runit/
 [alpine-base]: https://hub.docker.com/r/docker-suite/alpine-base/

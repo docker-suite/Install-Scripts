@@ -1,7 +1,7 @@
 # ![](https://github.com/docker-suite/artwork/raw/master/logo/png/logo_32.png) alpine-base
 [![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
 
-Based on [Alpine][alpine], this image included mandatory packages and tools for [DockBox][dockbox] images.
+Based on [Alpine][alpine], this image included mandatory packages and tools for [docker-suite (dsuite)][docker-suite] images.
 
 
 ## ![](https://github.com/docker-suite/artwork/raw/master/various/pin/png/pin_16.png) Packages included
@@ -70,15 +70,27 @@ Based on [Alpine][alpine], this image included mandatory packages and tools for 
   </tr>
   <tr>
    <td><code>/usr/local/sbin/gh-downloader</code></td>
-   <td><a href="https://github.com/dockboxsh/gh-downloader" >Simple utility to download files from GitHub Repository</a></td>
+   <td><a href="https://github.com/bash-suite/gh-downloader" >Simple utility to download files from GitHub Repository</a></td>
   </tr>
   <tr>
    <td><code>/usr/local/sbin/templater</code></td>
-   <td><a href="https://github.com/dockboxsh/templater" >Simple templating system that replaces {{VAR}} by the value of $VAR</a></td>
+   <td><a href="https://github.com/bash-suite/templater" >Simple templating system that replaces {{VAR}} by the value of $VAR</a></td>
   </tr>
   <tr>
    <td><code>/usr/local/sbin/wait-host</code></td>
-   <td><a href="https://github.com/dockboxsh/wait-host" >Wait for host and TCP port availability</a></td>
+   <td><a href="https://github.com/bash-suite/wait-host" >Wait for host and TCP port availability</a></td>
+  </tr>
+  <tr>
+   <td><code>/usr/local/sbin/mvlink</code></td>
+   <td><a href="https://github.com/bash-suite/mvlink" >Move ORIGIN (file or folder) to DEST and create a symbolic ORIGIN to DEST</a></td>
+  </tr>
+  <tr>
+   <td><code>/usr/local/lib/bash-logger.sh</code></td>
+   <td><a href="https://github.com/bash-suite/bash-logger" >Bash Logger designed to incorperate PSR-3 compliance</a></td>
+  </tr>
+  <tr>
+   <td><code>/usr/local/lib/persist-env.sh</code></td>
+   <td><a href="https://github.com/bash-suite/persist-env">set or unset system wide environment variable</a></td>
   </tr>
  </tbody>
 </table>
@@ -101,8 +113,8 @@ Have a look at the following table to see all supported environment variables fo
   <tr>
    <td><code>DEBUG_LEVEL</code></td>
    <td>int</td>
-   <td><code>0</code></td>
-   <td>Set debug level for startup.<br/><br/><sub><code>0</code> Warnings and errors are shown.<br/><code>1</code> Info, warnings and errors are shown.<br/><code>2</code> All log messages and executed commands are shown.</sub></td>
+   <td><code>NOTICE</code></td>
+   <td>Set debug level for startup.<br/>See <a href="https://github.com/bash-suite/bash-logger#logging-levels">bash-logger</a> for logging levels</td>
   </tr>
   <tr>
    <td><code>BOOT_DELAY</code></td>
@@ -123,7 +135,7 @@ Have a look at the following table to see all supported environment variables fo
    <td>Make sure that proxy defined in <code>HTTPS_PROXY</code> or <code>https_proxy</code> is well formated</td>
   </tr>
   <tr>
-   <td><code>TIMEZONE</code><br/><code>TZ</code></td>
+   <td><code>TIMEZONE</code><br/><br/><code>TZ</code></td>
    <td>string</td>
    <td><code>UTC</code></td>
    <td>Set docker OS timezone.<br/>(Example: <code>Europe/Paris</code>)</td>
@@ -145,4 +157,4 @@ Have a look at the following table to see all supported environment variables fo
 
 
 [alpine]: http://alpinelinux.org/
-[dockbox]: https://github.com/dockbox/
+[docker-suite]: https://github.com/docker-suite/
