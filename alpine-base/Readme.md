@@ -1,5 +1,9 @@
 # ![](https://github.com/docker-suite/artwork/raw/master/logo/png/logo_32.png) alpine-base
-[![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
+![Docker Pulls](https://img.shields.io/docker/pulls/dsuite/alpine-base.svg?style=flat-square)
+![Docker Stars](https://img.shields.io/docker/stars/dsuite/alpine-base.svg?style=flat-square)
+![MicroBadger Layers (tag)](https://img.shields.io/microbadger/layers/dsuite/alpine-base/latest.svg?style=flat-square)
+![MicroBadger Size (tag)](https://img.shields.io/microbadger/image-size/dsuite/alpine-base/latest.svg?style=flat-square)
+[![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 
 Based on [Alpine][alpine], this image included mandatory packages and tools for [docker-suite (dsuite)][docker-suite] images.
 

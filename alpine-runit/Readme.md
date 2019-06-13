@@ -1,5 +1,9 @@
 # ![](https://github.com/docker-suite/artwork/raw/master/logo/png/logo_32.png) alpine-runit
-[![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
+![Docker Pulls](https://img.shields.io/docker/pulls/dsuite/alpine-runit.svg?style=flat-square)
+![Docker Stars](https://img.shields.io/docker/stars/dsuite/alpine-runit.svg?style=flat-square)
+![MicroBadger Layers (tag)](https://img.shields.io/microbadger/layers/dsuite/alpine-runit/latest.svg?style=flat-square)
+![MicroBadger Size (tag)](https://img.shields.io/microbadger/image-size/dsuite/alpine-runit/latest.svg?style=flat-square)
+[![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 
 runit is an init scheme for Unix-like operating systems that initializes, supervises, and ends processes throughout the operating system.Runit is a reimplementation of the daemontools process supervision toolkit that runs on the Linux, Mac OS X, *BSD, and Solaris operating systems. Runit features parallelization of the start up of system services, which can speed up the boot time of the operating system.
 
