@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 # set -e : Exit the script if any statement returns a non-true return value.
 set -e
@@ -7,22 +7,33 @@ set -e
 apk update
 
 # curl must be installed: https://curl.haxx.se/
-apk add curl
+apk add --no-cache curl
 
-# Download the install-base script first and run it
-curl -s -o /tmp/install-base.sh https://raw.githubusercontent.com/craftdock/Install-Scripts/master/alpine-base/install-base.sh
-sh /tmp/install-base.sh
-
-
-# Download files
-if [ -n "$GH_TOKEN" ]; then
-    gh-downloader -T=$GH_TOKEN -u=craftdock -r=Install-Scripts -p=alpine-runit/rootfs -o=/
-else
-    gh-downloader -u=craftdock -r=Install-Scripts -p=alpine-runit/rootfs -o=/
+# Download and run install-base script first and run it
+if [ ! -f /tmp/install-base.sh ]; then
+    curl -s -o /tmp/install-base.sh https://raw.githubusercontent.com/docker-suite/Install-Scripts/master/alpine-base/install-base.sh
+fi
+if [ -f /tmp/install-base.sh ]; then
+    sh /tmp/install-base.sh
 fi
 
-# Remove all .gitkeep files
-find /etc/crontabs -name ".gitkeep" -type f -delete
+# Download alpine-runit files if needded
+if [ ! -d /etc/runit ]; then
+    if [ -n "$GH_TOKEN" ]; then
+        gh-downloader -T=$GH_TOKEN -u=docker-suite -r=Install-Scripts -p=alpine-runit/rootfs -o=/
+    else
+        gh-downloader -u=docker-suite -r=Install-Scripts -p=alpine-runit/rootfs -o=/
+    fi
+fi
+
+# Make bin and sbin files accessible and executable
+[ $(ls /usr/local/bin | wc -l) -gt 0 ] && chmod 0755 /usr/local/bin/*
+[ $(ls /usr/local/sbin | wc -l) -gt 0 ] && chmod 0755 /usr/local/sbin/*
+
+# Make entrypoint accessible and executable
+chmod 0755 /etc/entrypoint.d/*
+chmod 0755 -R /etc/runit/*
+chmod 0755 /entrypoint.sh
 
 # Add packages
 apk-install --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ \
@@ -30,9 +41,3 @@ apk-install --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ \
     runit \
     && rm -f /sbin/runit \
     && rm -f /sbin/runit-init
-
-# Permissions
-chmod 0755 /entrypoint
-chmod 0755 -R /etc/runit/*
-[ $(ls /usr/local/bin | wc -l) -gt 0 ] && chmod 0755 /usr/local/bin/*
-[ $(ls /usr/local/sbin | wc -l) -gt 0 ] && chmod 0755 /usr/local/sbin/*

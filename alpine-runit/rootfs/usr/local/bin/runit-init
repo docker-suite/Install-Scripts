@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 #
 # This is the runit manager scripts overlay. It requires runit package being installed.
@@ -7,6 +7,9 @@
 # set -e : Exit the script if any statement returns a non-true return value.
 # set -u : Exit the script when using uninitialised variable.
 set -eu
+
+# Add libraries
+source /usr/local/lib/persist-env.sh
 
 # Re-define PATH
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
@@ -32,18 +35,15 @@ _shutdown() {
 }
 
 # Just to make sure that runit will start
-\rm -f /etc/runit/stopall
+rm -f /etc/runit/stopall
 
 # Run pre-daemon tasks
 /etc/runit/1
 
-# Include envvars if it exist
-[ -r /etc/envvars ] && . /etc/envvars
-
 # Start services in /etc/service
 if [ -e /etc/runit/runit ] && [ ! -e /etc/runit/stopall ]; then
     echo "-- ------------------------------------------------------------------"
-    echo "-- Start the following services under runit supervisor"
+    echo "-- Services managed by runit supervisor"
     echo "-- ------------------------------------------------------------------"
     if [ -n "$(ls -A /etc/service.d)" ]; then
         for _dir in /etc/service.d/*; do
@@ -82,16 +82,14 @@ else
    NTOT=$(ecalc ${NSV}*2/${NSTEP})
 fi
 N=0
-printf "-- ";
 while [ ${N} -le ${NTOT} ]; do
    sleep ${NSTEP};
    N=$(ecalc ${N}+1);
-   printf ".";
 done
 
 echo ""
 echo "-- ------------------------------------------------------------------"
-echo "-- List all supervised services status ..."
+echo "-- Services status"
 echo "-- ------------------------------------------------------------------"
 for _srv in $(ls -1 /etc/service); do
    sv status ${_srv}

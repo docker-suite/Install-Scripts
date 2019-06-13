@@ -1,13 +1,16 @@
 #!/bin/sh
-    
+
+set -o nounset     # Strict var declare
+set -o errexit     # Exit on error
+
 
 #---  FUNCTION  -------------------------------------------------------------------------------------------------------
-#          NAME:  getppath
-#%   DESCRIPTION:  Get the process path of the given pid
-#%   USAGE: getppath process_id | process_name
-#%   REQUIRES: tr, getpnamebyid, getpidsbyname, head, ps ,grep, abspath
+#   NAME:  getppath
+#   DESCRIPTION:  Get the process path of the given pid
+#   USAGE: getppath process_id | process_name
+#   REQUIRES: tr, getpnamebyid, getpidsbyname, head, ps ,grep, abspath
 #----------------------------------------------------------------------------------------------------------------------
-_getppath() {
+_get_ppath() {
     if [ $# -ne 1 ]; then
         echo "Usage: getppath process_id | process_name" >&2
         return 1
@@ -43,8 +46,7 @@ _getppath() {
     fi
 }
 
+_get_ppath "$@"
 
-_getppath "$@"
-
-unset -f _getppath
+unset -f _get_ppath
 exit 0

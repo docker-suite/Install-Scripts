@@ -1,11 +1,16 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
+# Add libraries
+source /usr/local/lib/bash-logger.sh
+source /usr/local/lib/persist-env.sh
+
+#
 PATH=/bin:/usr/bin
 msg="System is going down in 8 seconds..."
 
 # Tell runit to shutdown the system: http://smarden.org/runit/runit.8.html#sect7
 touch /etc/runit/stopit
-chmod 100 /etc/runit/stopit && echo "$msg" | wall
+chmod 100 /etc/runit/stopit && WARNING "$msg" | wall
 
 # Wait before shuting down
 /bin/sleep 8

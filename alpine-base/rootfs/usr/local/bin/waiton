@@ -1,11 +1,14 @@
 #!/bin/sh
-    
+
+set -o nounset     # Strict var declare
+set -o errexit     # Exit on error
+
 
 #---  FUNCTION  -------------------------------------------------------------------------------------------------------
-#          NAME:  waiton
-#%   DESCRIPTION:  Wait until the given pid finish
-#%   USAGE: waiton "$(getpid curl)"
-#%   REQUIRES: ps, sleep, getpnamebyid
+#   NAME:  waiton
+#   DESCRIPTION:  Wait until the given pid finish
+#   USAGE: waiton "$(getpid curl)"
+#   REQUIRES: ps, sleep, getpnamebyid
 #----------------------------------------------------------------------------------------------------------------------
 _waiton() {
    if [ -z "$*" ]; then

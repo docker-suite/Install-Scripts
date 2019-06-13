@@ -1,52 +1,61 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 # set -e : Exit the script if any statement returns a non-true return value.
-# set -o pipefail : Check the exit code of pipeline's last command.
 # set -u : Exit the script when using uninitialised variable.
+# set -o pipefail : Check the exit code of pipeline's last command.
 set -euo pipefail
+
+# Add libraries
+source /usr/local/lib/bash-logger.sh
+source /usr/local/lib/persist-env.sh
 
 # Runlevels 0: Halt
 LAST=0
 # Runlevels 6: Reboot
 test -x /etc/runit/reboot && LAST=6
 
-echo "-- Shutting down"
+#
+INFO "[RUNIT] Shutting down ..."
 
 # Stop every services : http://smarden.org/runit/sv.8.html
 if [ -n "$(ls -A /etc/service)" ]; then
-    echo "-- Waiting for services to stop ..."
+    #
+    INFO "[RUNIT] Waiting for services to stop ..."
 
     # First try to stop services by the reverse order
     for _srv in $(ls -r1 /etc/service); do
+        DEBUG "[RUNIT] Stopping ${_srv} ..."
         sv -w196 force-stop ${_srv} 2>/dev/null
     done
 
-    # Then force stop all service if there any remains
+    # Then force stop all service if any remains
     sv -w196 force-stop /etc/service/* 2>/dev/null
 
-    echo "-- All services are stopped"
+    #
+    INFO "[RUNIT] All services are stopped"
 fi
 
 # Run every scripts in /etc/runit/finish.d
 # before shutting down runit
 if [ -n "$(ls -A /etc/runit/finish.d)" ]; then
-    echo "-- Running shutdown scripts ..."
+    #
+    INFO "[RUNIT] Running shutdown scripts ..."
 
     # Iterate throwall script in /etc/runit/finish.d/
     # and run them if the scripts are executable
     for _script in /etc/runit/finish.d/*; do
         if [ -x ${_script} ]; then
-            echo "-- Running: ${_script}"
+            DEBUG "[RUNIT] Running ${_script}"
             ${_script}
         else
-            echo >&2 "-- Failed to run: ${_script}. Please chmod +x ${_script}"
+            ERROR "[RUNIT] Failed to run: ${_script}. Please chmod +x ${_script}"
         fi
     done
 fi
 
 # Just to make sure that runit will start
 # at next start up
-\rm -f /etc/runit/stopall
+rm -f /etc/runit/stopall
 
 # Change the runlevel
 [ -x /etc/init.d/rc ] && /etc/init.d/rc ${LAST}

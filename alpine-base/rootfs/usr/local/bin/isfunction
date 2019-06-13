@@ -1,11 +1,14 @@
 #!/bin/sh
-    
+
+set -o nounset     # Strict var declare
+set -o errexit     # Exit on error
+
 
 #---  FUNCTION  -------------------------------------------------------------------------------------------------------
-#          NAME:  isfunction
-#%   DESCRIPTION:  Check if a function is defined
-#%   USAGE: if [ -z $(isfunction psp) ]; then OR if isfunction psp 2>/dev/null; then
-#%   REQUIRES: type, grep
+#   NAME:  isfunction
+#   DESCRIPTION:  Check if a function is defined
+#   USAGE: if [ -z $(isfunction psp) ]; then OR if isfunction psp 2>/dev/null; then
+#   REQUIRES: type, grep
 #----------------------------------------------------------------------------------------------------------------------
 unset -f isfunction
 isfunction() {

@@ -1,0 +1,28 @@
+#!/bin/sh
+
+set -o nounset     # Strict var declare
+set -o errexit     # Exit on error
+
+
+#---  FUNCTION  -------------------------------------------------------------------------------------------------------
+#   NAME:  getusernamebyuid
+#   DESCRIPTION:  Get the user name from uid
+#   USAGE: getusernamebyuid 1000
+#   REQUIRES: getent
+#----------------------------------------------------------------------------------------------------------------------
+_get_username_by_uid() {
+    if [ $# -lt 1 ]; then
+        return 1
+    fi
+
+	if user="$( getent passwd "${1}" )"; then
+		echo "${user//:*}"
+		return 0
+	fi
+	return 1
+}
+
+_get_username_by_uid "$@"
+
+unset -f _get_username_by_uid
+exit 0

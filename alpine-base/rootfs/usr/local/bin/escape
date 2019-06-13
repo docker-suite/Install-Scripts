@@ -1,11 +1,14 @@
 #!/bin/sh
-    
+
+set -o nounset     # Strict var declare
+set -o errexit     # Exit on error
+
 
 #---  FUNCTION  -------------------------------------------------------------------------------------------------------
-#          NAME:  escape
-#%   DESCRIPTION:  Escape special chars of the given string.
-#%   USAGE: escape "the string" or "$(escape "the string")"
-#%   REQUIRES: sed
+#   NAME:  escape
+#   DESCRIPTION:  Escape special chars of the given string.
+#   USAGE: escape "the string" or "$(escape "the string")"
+#   REQUIRES: sed
 #----------------------------------------------------------------------------------------------------------------------
 _escape() {
     if [ $# -lt 1 ]; then
@@ -41,9 +44,7 @@ _escape() {
    fi
 }
 
-
 _escape "$@"
-
 
 unset -f _escape
 exit 0

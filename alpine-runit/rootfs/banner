@@ -8,8 +8,8 @@
        |_|   \__,_|_| |_|_|\__|
 
 
-  Welcome to craftdock/alpine-runit :
-      for more info type : runit help
+  Welcome to dsuite/alpine-runit :
+      for more info run : runit help
 
-  or visit : https://github.com/CraftDock/alpine-runit
+  or visit : https://github.com/docker-suite/alpine-runit
 

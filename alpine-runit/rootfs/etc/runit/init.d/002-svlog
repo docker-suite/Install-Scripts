@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 #
 # Enable logs by service
@@ -8,12 +8,17 @@
 # set -u : Exit the script when using uninitialised variable.
 set -eu
 
-# Check if LOGGER is enable or not
-[ -z $LOGGER ] && return 0
-[ $LOGGER = "false" ] && return 0
+# Add libraries
+source /usr/local/lib/bash-logger.sh
+source /usr/local/lib/persist-env.sh
 
-# LOGGER is enable
-echo "-- Preparing /etc/service.d/ services log folders and loggers ..."
+# Check if LOGGER is enable or not
+LOGGER=$(env_get LOGGER)
+[ -z $LOGGER ] && exit 0
+[ $LOGGER = "false" ] && exit 0
+
+#
+INFO "[RUNIT] Preparing /etc/service.d/ services log folders and loggers ..."
 
 # Preparing services log folders and loggers
 if [ -n "$(ls -1 /etc/service.d)" ]; then

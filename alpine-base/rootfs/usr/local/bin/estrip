@@ -1,12 +1,14 @@
 #!/bin/sh
-    
 
-## require shbin/escape
+set -o nounset     # Strict var declare
+set -o errexit     # Exit on error
+
+
 #---  FUNCTION  -------------------------------------------------------------------------------------------------------
-#          NAME:  estrip [estrip -em "$(cat /etc/apt/sources.list)" OR cat /etc/apt/sources.list | estrip -cm | estrip -e]
-#%   DESCRIPTION:  Strip special chars from the given string.
-#%   USAGE: estrip [-a|-an|-b|-ct|-cm|-cl|-d|-e|-em|-f|-h|-lo|-m|-ml|-n|-p|-q|-r|-rl|-sp|-u|-ub|-up] "string"
-#%   REQUIRES: escape, tr, sed, awk
+#   NAME:  estrip [estrip -em "$(cat /etc/apt/sources.list)" OR cat /etc/apt/sources.list | estrip -cm | estrip -e]
+#   DESCRIPTION:  Strip special chars from the given string.
+#   USAGE: estrip [-a|-an|-b|-ct|-cm|-cl|-d|-e|-em|-f|-h|-lo|-m|-ml|-n|-p|-q|-r|-rl|-sp|-u|-ub|-up] "string"
+#   REQUIRES: escape, tr, sed, awk
 #----------------------------------------------------------------------------------------------------------------------
 _estrip() {
     case "$1" in
@@ -257,7 +259,6 @@ _estrip() {
     esac
     return 0
 }
-
 
 _estrip "$@"
 

@@ -1,11 +1,14 @@
 #!/bin/sh
-    
+
+set -o nounset     # Strict var declare
+set -o errexit     # Exit on error
+
 
 #---  FUNCTION  -------------------------------------------------------------------------------------------------------
-#          NAME:  killzb
-#%   DESCRIPTION:  Kill all zombie proesses
-#%   USAGE: killzb
-#%   REQUIRES: ps, shc, grep, awk, kill
+#   NAME:  killzb
+#   DESCRIPTION:  Kill all zombie proesses
+#   USAGE: killzb
+#   REQUIRES: ps, shc, grep, awk, kill
 #----------------------------------------------------------------------------------------------------------------------
 _killzb() {
     echo "Plan to kill defunct and zombie processes:"
@@ -31,7 +34,6 @@ _killzb() {
         echo "No zombie processes are found."
     fi
 }
-
 
 _killzb
 

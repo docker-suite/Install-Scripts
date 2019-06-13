@@ -1,0 +1,22 @@
+FROM alpine
+
+
+## Copy files
+COPY alpine-base/rootfs /
+COPY alpine-base/install-base.sh /tmp/install-base.sh
+
+
+## Install
+RUN \
+	# Print executed commands
+	set -x \
+    # Update repository indexes
+    && apk update \
+    # Run the install script
+    && sh /tmp/install-base.sh \
+	# Clear apk's cache
+	&& apk-cleanup
+
+
+## Entrypoint
+ENTRYPOINT ["/entrypoint.sh"]

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 #
 # This is the runit entrypoint
@@ -7,6 +7,9 @@
 # set -e : Exit the script if any statement returns a non-true return value.
 # set -u : Exit the script when using uninitialised variable.
 set -eu
+
+# Add libraries
+source /usr/local/lib/persist-env.sh
 
 # Default values
 progname=$(basename $0)
@@ -17,7 +20,7 @@ if [ $# -lt 1 ]; then
     echo ""
     echo "$progname : Simple Service Manager for Runit"
     echo ""
-    echo "Type $progname help | to see how to list, start, stop Runit and much more."
+    echo "Run  $progname help | to see how to list, start, stop Runit and much more."
     echo "Or   $progname service help | to see all actions possible for any services."
     echo ""
     exit 0
@@ -29,14 +32,14 @@ _serviceactions="enable disable start stop status reload restart up down once pa
 _servicetpldir="/etc/service.d"
 _servicedir="/etc/service"
 
-function getHelp() {
+getHelp() {
     cat << USAGE >&2
 
 $progname : Simple Service Manager for Runit
 
 Usage: $progname [OPTIONS]
 
-    -h|--help|help              Get  list of installed services
+    -h|--help|help              Get some help
     -l|--ls|--list|ls|list      Get list of installed services
     --start|start               Start Runit
     --stop|stop                 Stop Runit
@@ -47,7 +50,7 @@ USAGE
 }
 
 # Get the list of installed services
-function listServices() {
+listServices() {
     echo "-- List of installed services:"
     if [ -n "$(ls -A ${_servicetpldir})" ]; then
         for _dir in ${_servicetpldir}/*; do
@@ -62,12 +65,12 @@ function listServices() {
 }
 
 # Check if runit is started
-function isStarted() {
+isStarted() {
     [ -n "$(getpidsbyname runsvdir 2>/dev/null)" ] && return 0 || return 1
 }
 
 # Start Runit
-function start() {
+start() {
     # Exit if runit is already started
     isStarted && ( >&2 echo "runit is already started." && return 1 )
     # Run runit init wrapper
@@ -81,7 +84,7 @@ function start() {
 }
 
 # Stop Runit
-function stop() {
+stop() {
     # Exit if runit is not started
     isStarted || ( >&2 echo "Cannot stop runit has it is not started." && return 1 )
     # Get runit-init id
@@ -92,8 +95,8 @@ function stop() {
     waiton $_pid 2>/dev/null
 }
 
-# Dsiplay service help
-function getServiceHelp() {
+# Display service help
+getServiceHelp() {
     echo ""
     echo "$progname : Simple Service Manager for Runit"
     echo ""
@@ -105,27 +108,26 @@ function getServiceHelp() {
 }
 
 # Check if a service exist
-function serviceExist() {
+serviceExist() {
     [ "$#" = 0 ] && return 2
     [ ! -d "${_servicetpldir}/$1" ] && return 1
     return 0
 }
 
 # Check if a service is enable
-function serviceIsEnable() {
+serviceIsEnable() {
     [ "$#" = 0 ] && return 2
     [ ! -d "${_servicedir}/$1" ] && return 1
     return 0
-
 }
 
 # Enable a service
-function serviceEnable() {
+serviceEnable() {
     [ "$#" = 0 ] && return 2
     # the service must exist
     serviceExist $1 || ( >&2 echo "Service \"$1\" doesn't exist." && return 1 )
     # the service must be disable
-    serviceIsEnable $1 && ( >&2 echo "Service \"$1\" already enabled." && return 1 )
+    serviceIsEnable $1 && ( >&2 echo "Service \"$1\" is already enabled." && return 1 )
 
     # Create symbolic link from /etc/service.d to /etc/service
     ln -sf ${_servicetpldir}/$1 ${_servicedir}
@@ -135,12 +137,12 @@ function serviceEnable() {
 }
 
 # Enable a service
-function serviceDisable() {
+serviceDisable() {
     [ "$#" = 0 ] && return 2
     # the service must be enable
     serviceIsEnable $1 || ( >&2 echo "Service \"$1\" is not enabled." && return 1 )
     # Shut down the service
-    sv down ${1} || ( >&2 echo "Unable to to shut down  \"$1\"." && return 1 )
+    sv down $1 || ( >&2 echo "Unable to shut down  \"$1\"." && return 1 )
 
     # Remove the symbolic link
     rm ${_servicedir}/$1
@@ -150,7 +152,7 @@ function serviceDisable() {
 }
 
 # Execute service action
-function serviceAction() {
+serviceAction() {
     sv ${1} ${2}
 }
 
@@ -204,7 +206,7 @@ case "$1" in
             ;;
             - | -- | *)
                 echo "[Error] - $1 is not a supported action."
-                echo "[Error] - Please type $progname for usage details."
+                echo "[Error] - Please run $progname for usage details."
             ;;
             esac
         #
@@ -213,7 +215,7 @@ case "$1" in
             _servicename=$1
             if [ ! -d "${_servicetpldir}/${_servicename}" ] || [ ! -e "${_servicetpldir}/${_servicename}/run" ]; then
                 echo "[Error] - ${_servicename} is not a valid service name."
-                echo "[Error] - Please type $progname list fot the full list of available services."
+                echo "[Error] - Please run $progname list fot the full list of available services."
             else
                 # Check the action
                 _action=$2
@@ -230,13 +232,13 @@ case "$1" in
                         serviceAction ${_action} ${_servicename}
                     else
                         echo "[Error] - ${_action} is not a supported action."
-                        echo "[Error] - Please type $progname for usage details."
+                        echo "[Error] - Please run $progname for usage details."
                     fi
                 fi
             fi
         elif [ $# -gt 2 ]; then
             echo "[Error] - Too many parameters."
-            echo "[Error] - Please type $progname for usage details."
+            echo "[Error] - Please run $progname for usage details."
         fi
     ;;
 
@@ -251,7 +253,7 @@ case "$1" in
 esac
 
 unset getHelp listServices isStarted start stop shutdown
-unset  getServiceHelp serviceExist serviceIsEnable serviceEnable serviceDisable
+unset getServiceHelp serviceExist serviceIsEnable serviceEnable serviceDisable
 unset _runitactions _serviceactions _servicetpldir _servicetdir _dir
 unset _runitinitid _servicename _action
 

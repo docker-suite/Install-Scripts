@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 #
 # Enable all services wich contain the file enable
@@ -7,6 +7,13 @@
 # set -e : Exit the script if any statement returns a non-true return value.
 # set -u : Exit the script when using uninitialised variable.
 set -eu
+
+# Add libraries
+source /usr/local/lib/bash-logger.sh
+source /usr/local/lib/persist-env.sh
+
+#
+INFO "[RUNIT] Enabling services ..."
 
 if [ -n "$(ls -A /etc/service.d)" ]; then
     # Change internal field separator
@@ -19,7 +26,7 @@ if [ -n "$(ls -A /etc/service.d)" ]; then
         # However, this service should not also be disabled
         if [ ! -e "/etc/service.d/${_servicename}/disable" ]; then
             ln -s ${_dir} /etc/service/
-            echo "--   Enabling service: ${_servicename}"
+            INFO "[RUNIT]    Enabling service: ${_servicename}"
         fi
     done
 fi

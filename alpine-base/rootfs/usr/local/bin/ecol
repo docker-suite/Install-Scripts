@@ -1,11 +1,14 @@
 #!/bin/sh
 
+set -o nounset     # Strict var declare
+set -o errexit     # Exit on error
+
 
 #---  FUNCTION  -------------------------------------------------------------------------------------------------------
-#          NAME:  ecol
-#%   DESCRIPTION:  Get the nth column from the given string
-#%   USAGE: ecol [-d , ] 2[:8] "$(psp salt)" OR psp salt | ecol [-d ,] 2[:8]
-#%   REQUIRES: cut, tr, awk, estrip, printf
+#   NAME:  ecol
+#   DESCRIPTION:  Get the nth column from the given string
+#   USAGE: ecol [-d , ] 2[:8] "$(psp salt)" OR psp salt | ecol [-d ,] 2[:8]
+#   REQUIRES: cut, tr, awk, estrip, printf
 #----------------------------------------------------------------------------------------------------------------------
 _ecol() {
     local dlm=" "

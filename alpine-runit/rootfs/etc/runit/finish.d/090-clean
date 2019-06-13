@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 chmod a+w /etc/runit/stopit
 rm -f /etc/runit/{runit,stopit,stopall}

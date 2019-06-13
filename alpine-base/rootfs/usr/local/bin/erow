@@ -1,11 +1,14 @@
 #!/bin/sh
-    
+
+set -o nounset     # Strict var declare
+set -o errexit     # Exit on error
+
 
 #---  FUNCTION  -------------------------------------------------------------------------------------------------------
-#          NAME:  erow
-#%   DESCRIPTION:  Get the nth row from the given string
-#%   USAGE: erow 2[:6] "$(psp salt)" OR psp salt | erow 2[:6]
-#%   REQUIRES: cut, awk
+#   NAME:  erow
+#   DESCRIPTION:  Get the nth row from the given string
+#   USAGE: erow 2[:6] "$(psp salt)" OR psp salt | erow 2[:6]
+#   REQUIRES: cut, awk
 #----------------------------------------------------------------------------------------------------------------------
 _erow() {
     if echo "$1" | grep -q : 2>/dev/null; then

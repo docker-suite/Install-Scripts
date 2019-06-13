@@ -1,0 +1,28 @@
+#!/bin/sh
+
+set -o nounset     # Strict var declare
+set -o errexit     # Exit on error
+
+
+#---  FUNCTION  -------------------------------------------------------------------------------------------------------
+#   NAME:  getgroupnamebygid
+#   DESCRIPTION:  Get the group name from gid
+#   USAGE: getgroupnamebygid 1000
+#   REQUIRES: getent
+#----------------------------------------------------------------------------------------------------------------------
+_get_groupname_by_gid() {
+    if [ $# -lt 1 ]; then
+        return 1
+    fi
+
+	if group="$( getent group "${1}" )"; then
+		echo "${group//:*}"
+		return 0
+	fi
+	return 1
+}
+
+_get_groupname_by_gid "$@"
+
+unset -f _get_groupname_by_gid
+exit 0
