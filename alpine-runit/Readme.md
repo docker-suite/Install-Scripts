@@ -1,4 +1,5 @@
 # ![](https://github.com/docker-suite/artwork/raw/master/logo/png/logo_32.png) alpine-runit
+[![Build Status](http://jenkins.hexocube.fr/job/docker-suite/job/alpine-runit/badge/icon?color=green&style=flat-square)](http://jenkins.hexocube.fr/job/docker-suite/job/alpine-runit/)
 ![Docker Pulls](https://img.shields.io/docker/pulls/dsuite/alpine-runit.svg?style=flat-square)
 ![Docker Stars](https://img.shields.io/docker/stars/dsuite/alpine-runit.svg?style=flat-square)
 ![MicroBadger Layers (tag)](https://img.shields.io/microbadger/layers/dsuite/alpine-runit/latest.svg?style=flat-square)

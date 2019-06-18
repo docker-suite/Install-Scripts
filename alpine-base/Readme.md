@@ -1,4 +1,5 @@
 # ![](https://github.com/docker-suite/artwork/raw/master/logo/png/logo_32.png) alpine-base
+[![Build Status](http://jenkins.hexocube.fr/job/docker-suite/job/alpine-base/badge/icon?color=green&style=flat-square)](http://jenkins.hexocube.fr/job/docker-suite/job/alpine-base/)
 ![Docker Pulls](https://img.shields.io/docker/pulls/dsuite/alpine-base.svg?style=flat-square)
 ![Docker Stars](https://img.shields.io/docker/stars/dsuite/alpine-base.svg?style=flat-square)
 ![MicroBadger Layers (tag)](https://img.shields.io/microbadger/layers/dsuite/alpine-base/latest.svg?style=flat-square)
