@@ -7,4 +7,4 @@ TIMEZONE=$(env_get "TIMEZONE")
 TZ=$(env_get "TZ")
 
 [ -n "${TIMEZONE}" ] && set-timezone "${TIMEZONE}" || true
-[ -n "${TZ}" ] && "set-timezone ${TZ}" || true
+[ -n "${TZ}" ] && set-timezone "${TZ}" || true
