@@ -32,7 +32,7 @@ test-base: build-base
 		-v /tmp:/tmp \
 		-v /var/run/docker.sock:/var/run/docker.sock \
 		dsuite/goss:latest \
-		dgoss run -e NEW_UID=1005 --entrypoint=/goss/entrypoint.sh $(DOCKER_BASE)
+		dgoss run -e NEW_UID=1005 -e http_proxy=${http_proxy} -e https_proxy=${https_proxy} --entrypoint=/goss/entrypoint.sh $(DOCKER_BASE)
 	docker run --rm -it \
 		-e http_proxy=${http_proxy} \
 		-e https_proxy=${https_proxy} \
@@ -41,7 +41,7 @@ test-base: build-base
 		-v /tmp:/tmp \
 		-v /var/run/docker.sock:/var/run/docker.sock \
 		dsuite/goss:latest \
-		dgoss run -e BOOT_DELAY=0 -e NEW_GID=1005 --entrypoint=/goss/entrypoint.sh $(DOCKER_BASE)
+		dgoss run -e BOOT_DELAY=0 -e NEW_GID=1005 -e http_proxy=${http_proxy} -e https_proxy=${https_proxy} --entrypoint=/goss/entrypoint.sh $(DOCKER_BASE)
 
 test-runit: test-base build-runit
 	docker run --rm -it \
@@ -51,7 +51,7 @@ test-runit: test-base build-runit
 		-v /tmp:/tmp \
 		-v /var/run/docker.sock:/var/run/docker.sock \
 		dsuite/goss:latest \
-		dgoss run --entrypoint=/goss/entrypoint.sh $(DOCKER_RUNIT)
+		dgoss run -e http_proxy=${http_proxy} -e https_proxy=${https_proxy} --entrypoint=/goss/entrypoint.sh $(DOCKER_RUNIT)
 
 
 shell-base: build-base

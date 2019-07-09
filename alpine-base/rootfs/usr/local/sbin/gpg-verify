@@ -1,0 +1,73 @@
+#!/usr/bin/env bash
+
+# set -e : Exit the script if any statement returns a non-true return value.
+set -e
+
+readonly PROGNAME=$(basename $0)
+
+if [ $# -ne 2 ]; then
+    echo "${PROGNAME} <signature> <file>"
+    echo "Verifying the File's Signature"
+    exit 1
+else
+    signature="${1}"
+    file="${2}"
+    found=""
+    apkdel=""
+fi
+
+install_gnupg() {
+    apkdel=".setup-gnupg"
+    apk-install --quiet --force --virtual $apkdel gnupg
+}
+
+remove_gnupg() {
+    if [[ -n "${apkdel}" ]]; then
+        apk-remove --quiet $apkdel
+    fi
+}
+
+# Check if gnupg package need to be installed
+if ! command -v gpg >/dev/null 2>&1; then
+    echo "Installing gnupg package ..."
+    install_gnupg
+fi
+
+# List of keyserver to contact
+declare -a keyservers=(
+    "ha.pool.sks-keyservers.net"
+    "hkp://keyserver.ubuntu.com:80"
+    "hkp://p80.pool.sks-keyservers.net:80"
+    "pgp.mit.edu"
+)
+
+#
+if [[ -z "${GPG_KEYS}" ]]; then
+    echo >&2 "error: GPG_KEYS not found"
+    remove_gnupg
+    exit 1
+fi
+
+# Read keys from GPG_KEYS
+IFS=';' read -ra keys <<< "${GPG_KEYS}"
+
+#
+for key in "${keys[@]}"; do
+    for server in "${keyservers[@]}"; do
+        echo "Fetching GPG key ${key} from ${server}"
+        gpg --keyserver "$server" --keyserver-options "timeout=10 http-proxy=${http_proxy}" --recv-keys "${key}" && found="yes" && break 2
+    done
+done
+
+#
+if [[ -z "${found}" ]]; then
+    echo >&2 "error: failed to fetch GPG key ${GPG_KEYS}"
+    remove_gnupg
+    exit 1
+fi
+
+#
+gpg --batch --verify "${signature}" "${file}"
+
+# clean up
+remove_gnupg
