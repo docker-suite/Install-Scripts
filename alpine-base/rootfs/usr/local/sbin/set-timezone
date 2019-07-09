@@ -8,8 +8,6 @@ readonly PROGNAME=$(basename $0)
 if [ $# -ne 1 ]; then
     echo "${PROGNAME} <timezone>"
     echo "set the timezone in the container"
-    echo
-    echo "${PROGNAME} list -  lists available timezones"
     exit 1
 else
     _newtz=${1}
