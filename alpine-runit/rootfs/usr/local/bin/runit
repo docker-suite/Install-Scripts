@@ -87,11 +87,11 @@ start() {
 stop() {
     # Exit if runit is not started
     isStarted || ( >&2 echo "Cannot stop runit has it is not started." && return 1 )
-    # Get runit-init id
-    _pid=$(getpidsbyname runit-init)
+    # Get runsvdir id
+    _pid=$(getpidsbyname runsvdir)
     # Kill it
     kill -SIGTERM $_pid
-    # Wait for the proccess runit-init to finish
+    # Wait for the proccess runsvdir to finish
     waiton $_pid 2>/dev/null
 }
 
