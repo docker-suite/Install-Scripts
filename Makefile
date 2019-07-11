@@ -67,6 +67,7 @@ shell-runit: build-runit
 		-e http_proxy=${http_proxy} \
 		-e https_proxy=${https_proxy} \
 		-e DEBUG_LEVEL=DEBUG \
+		-e MAIN_RESTART=0 \
 		$(DOCKER_RUNIT) \
 		bash
 
