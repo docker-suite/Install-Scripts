@@ -3,4 +3,3 @@
 chmod a+w /etc/runit/stopit
 rm -f /etc/runit/{runit,stopit,stopall}
 rm -rf /var/log/*
-rm -f /etc/envvars /etc/origenvvars

@@ -8,11 +8,11 @@ set -eu
 exec 2>&1
 
 # Add crons to /etc/crontabs/root
+echo '# CRON_START' >> /etc/crontabs/root
 for _file in $(find /etc/crontabs -type f -not -iname root | sort); do
     cat ${_file} >> /etc/crontabs/root
-    rm ${_file}
 done
-unset _file
+echo '# CRON_STOP' >> /etc/crontabs/root
 
 # Create cron log file
 mkdir -p /var/log/cron

@@ -13,7 +13,6 @@ source /usr/local/lib/persist-env.sh
 
 # Default values
 progname=$(basename $0)
-_runitinitid=1
 
 # Main help message
 if [ $# -lt 1 ]; then
@@ -27,7 +26,6 @@ if [ $# -lt 1 ]; then
 fi
 
 # Actions allowed for runit
-_runitactions="list start stop"
 _serviceactions="enable disable start stop status reload restart up down once pause cont hup alarm interrupt 1 2 term kill exit shutdown force-stop force-reload force-restart force-shutdown"
 _servicetpldir="/etc/service.d"
 _servicedir="/etc/service"
@@ -53,11 +51,11 @@ USAGE
 listServices() {
     echo "-- List of installed services:"
     if [ -n "$(ls -A ${_servicetpldir})" ]; then
-        for _dir in ${_servicetpldir}/*; do
-            if [ -d  ${_servicedir}/$(basename ${_dir}) ]; then
-                echo "--   [x] $(basename ${_dir})"
+        for _dir in "${_servicetpldir}"/*; do
+            if [ -d  "${_servicedir}/$(basename "${_dir}")" ]; then
+                echo "--   [x] $(basename "${_dir}")"
             else
-                echo "--   [ ] $(basename ${_dir})"
+                echo "--   [ ] $(basename "${_dir}")"
             fi
         done
     fi
@@ -77,6 +75,8 @@ start() {
     exec /usr/local/bin/runit-init &
     # Get the last background process id
     _runitinitid=$!
+    #
+    echo $_runitinitid > /etc/runit/pid
     # Wait for the proccess to be killed
     while kill -0 $_runitinitid > /dev/null 2>&1; do
         wait
@@ -87,12 +87,22 @@ start() {
 stop() {
     # Exit if runit is not started
     isStarted || ( >&2 echo "Cannot stop runit has it is not started." && return 1 )
-    # Get runsvdir id
-    _pid=$(getpidsbyname runsvdir)
+    # Tells runit to stop all running services
+    touch /etc/runit/stopall
+    # Stop all services one by one
+    for _dir in "${_servicetpldir}"/*; do
+        if [ -d  "${_servicedir}/$(basename "${_dir}")" ]; then
+            $progname service "$(basename "${_dir}")" stop &
+        fi
+    done
+    # Get runit-init pid
+    _pid=$(cat /etc/runit/pid)
     # Kill it
     kill -SIGTERM $_pid
     # Wait for the proccess runsvdir to finish
     waiton $_pid 2>/dev/null
+    # remove pid file
+    rm /etc/runit/pid
 }
 
 # Display service help
@@ -109,21 +119,21 @@ getServiceHelp() {
 
 # Check if a service exist
 serviceExist() {
-    [ "$#" = 0 ] && return 2
+    [ $# -ne 1 ] && return 2
     [ ! -d "${_servicetpldir}/$1" ] && return 1
     return 0
 }
 
 # Check if a service is enable
 serviceIsEnable() {
-    [ "$#" = 0 ] && return 2
+    [ $# -ne 1 ] && return 2
     [ ! -d "${_servicedir}/$1" ] && return 1
     return 0
 }
 
 # Enable a service
 serviceEnable() {
-    [ "$#" = 0 ] && return 2
+    [ $# -ne 1 ] && return 2
     # the service must exist
     serviceExist $1 || ( >&2 echo "Service \"$1\" doesn't exist." && return 1 )
     # the service must be disable
@@ -138,7 +148,7 @@ serviceEnable() {
 
 # Enable a service
 serviceDisable() {
-    [ "$#" = 0 ] && return 2
+    [ $# -ne 1 ] && return 2
     # the service must be enable
     serviceIsEnable $1 || ( >&2 echo "Service \"$1\" is not enabled." && return 1 )
     # Shut down the service
@@ -153,7 +163,13 @@ serviceDisable() {
 
 # Execute service action
 serviceAction() {
-    sv ${1} ${2}
+    [ $# -ne 2 ] && return 2
+    sv "${1}" "${2}"
+    # remove lock file if service is stopped
+    if [[ "$(sv status "${2}")" == down* ]]; then
+        [ -a "/etc/service.d/${2}/supervise/lock" ] && rm "/etc/service.d/${2}/supervise/lock"
+        [ -a "/etc/service.d/${2}/log/supervise/lock" ] && rm "/etc/service.d/${2}/log/supervise/lock"
+    fi
 }
 
 # Shutdown function called on (Ctrl+C)
@@ -255,6 +271,6 @@ esac
 unset getHelp listServices isStarted start stop shutdown
 unset getServiceHelp serviceExist serviceIsEnable serviceEnable serviceDisable
 unset _runitactions _serviceactions _servicetpldir _servicetdir _dir
-unset _runitinitid _servicename _action
+unset _servicename _action
 
 exit 0

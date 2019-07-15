@@ -59,6 +59,7 @@ shell-base: build-base
 		-e http_proxy=${http_proxy} \
 		-e https_proxy=${https_proxy} \
 		-e DEBUG_LEVEL=DEBUG \
+		--name base-test \
 		$(DOCKER_BASE) \
 		bash
 
@@ -68,6 +69,7 @@ shell-runit: build-runit
 		-e https_proxy=${https_proxy} \
 		-e DEBUG_LEVEL=DEBUG \
 		-e MAIN_RESTART=0 \
+		--name runit-test \
 		$(DOCKER_RUNIT) \
 		bash
 
