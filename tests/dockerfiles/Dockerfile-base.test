@@ -1,5 +1,6 @@
 FROM alpine
 
+ENV ALPINE_BASE=1
 
 ## Copy files
 COPY alpine-base/rootfs /
@@ -14,16 +15,13 @@ RUN \
     && apk update \
     # Run the install script
     && sh /tmp/install-base.sh \
+    # intsall packages
+    && apk-install gnupg \
 	# Clear apk's cache
 	&& apk-cleanup
 
-## Testing
-ENV TINI_VERSION v0.18.0
-ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
-ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini.asc /tini.asc
-ENV GPG_KEYS="595E85A6B1B4779EA4DAAEC70B588DFF0527A9B7"
-
-
+## Examples
+COPY tests/alpine-base/rootfs /
 
 ## Entrypoint
 ENTRYPOINT ["/entrypoint.sh"]

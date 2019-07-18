@@ -1,5 +1,6 @@
 FROM alpine
 
+ENV ALPINE_RUNIT=1
 
 ## Copy files
 COPY alpine-base/rootfs /

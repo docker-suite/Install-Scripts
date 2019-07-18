@@ -55,7 +55,8 @@ IFS=';' read -ra keys <<< "${GPG_KEYS}"
 for key in "${keys[@]}"; do
     for server in "${keyservers[@]}"; do
         echo "Fetching GPG key ${key} from ${server}"
-        gpg --keyserver "$server" --keyserver-options "timeout=10 http-proxy=${http_proxy}" --recv-keys "${key}" && found="yes" && break 2
+        options=$([ -n "$http_proxy" ] && echo "timeout=10 http-proxy=$http_proxy" || echo "timeout=10")
+        gpg --keyserver "$server" --keyserver-options "$options" --recv-keys "${key}" && found="yes" && break 2
     done
 done
 

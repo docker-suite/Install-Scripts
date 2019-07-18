@@ -74,12 +74,14 @@ package:
   tini:
     installed: true
 
+{{if getEnv "ALPINE_BASE"}}
 command:
-  gpg:
+  gpg-verify:
     exit-status: 0
-    exec: "gpg-verify /tini.asc /tini"
+    exec: "GPG_KEYS=595E85A6B1B4779EA4DAAEC70B588DFF0527A9B7 gpg-verify /tmp/tini.asc /tmp/tini"
     stderr: []
     skip: false
+{{end}}
 
 group:
   dsuite:
