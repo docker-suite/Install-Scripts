@@ -25,7 +25,7 @@ build-runit:
 test: test-base test-runit
 
 test-base: build-base
-	docker run --rm -it \
+	docker run -t --rm \
 		-e http_proxy=${http_proxy} \
 		-e https_proxy=${https_proxy} \
 		-v $(DIR)/tests/alpine-base:/goss \
@@ -33,7 +33,7 @@ test-base: build-base
 		-v /var/run/docker.sock:/var/run/docker.sock \
 		dsuite/goss:latest \
 		dgoss run -e NEW_UID=1005 -e http_proxy=${http_proxy} -e https_proxy=${https_proxy} --entrypoint=/goss/entrypoint.sh $(DOCKER_BASE)
-	docker run --rm -it \
+	docker run -t --rm \
 		-e http_proxy=${http_proxy} \
 		-e https_proxy=${https_proxy} \
 		-e GOSS_SLEEP=2 \
@@ -44,7 +44,7 @@ test-base: build-base
 		dgoss run -e BOOT_DELAY=0 -e NEW_GID=1005 -e http_proxy=${http_proxy} -e https_proxy=${https_proxy} --entrypoint=/goss/entrypoint.sh $(DOCKER_BASE)
 
 test-runit: test-base build-runit
-	docker run --rm -it \
+	docker run -t --rm \
 		-e http_proxy=${http_proxy} \
 		-e https_proxy=${https_proxy} \
 		-v $(DIR)/tests/alpine-runit:/goss \
