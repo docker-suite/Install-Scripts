@@ -48,23 +48,30 @@ if [[ -z "${GPG_KEYS}" ]]; then
     exit 1
 fi
 
-# Read keys from GPG_KEYS
-IFS=';' read -ra keys <<< "${GPG_KEYS}"
+# GPG_KEYS can be a file or a string
+if [[ -f "${GPG_KEYS}" ]]; then
 
-#
-for key in "${keys[@]}"; do
-    for server in "${keyservers[@]}"; do
-        echo "Fetching GPG key ${key} from ${server}"
-        options=$([ -n "$http_proxy" ] && echo "timeout=10 http-proxy=$http_proxy" || echo "timeout=10")
-        gpg --keyserver "$server" --keyserver-options "$options" --recv-keys "${key}" && found="yes" && break 2
+    gpg --import "${GPG_KEYS}"
+
+else
+    # Read keys from GPG_KEYS
+    IFS=';' read -ra keys <<< "${GPG_KEYS}"
+
+    #
+    for key in "${keys[@]}"; do
+        for server in "${keyservers[@]}"; do
+            echo "Fetching GPG key ${key} from ${server}"
+            options=$([ -n "$http_proxy" ] && echo "timeout=10 http-proxy=$http_proxy" || echo "timeout=10")
+            gpg --keyserver "$server" --keyserver-options "$options" --recv-keys "${key}" && found="yes" && break 2
+        done
     done
-done
 
-#
-if [[ -z "${found}" ]]; then
-    echo >&2 "error: failed to fetch GPG key ${GPG_KEYS}"
-    remove_gnupg
-    exit 1
+    #
+    if [[ -z "${found}" ]]; then
+        echo >&2 "error: failed to fetch GPG key ${GPG_KEYS}"
+        remove_gnupg
+        exit 1
+    fi
 fi
 
 #
