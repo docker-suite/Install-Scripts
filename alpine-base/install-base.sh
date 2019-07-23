@@ -46,6 +46,8 @@ chmod 0755 /entrypoint.sh
 apk-install --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ \
     `# bash: https://tiswww.case.edu/php/chet/bash/bashtop.html/` \
     bash \
+    `# coreutils: https://www.gnu.org/software/coreutils/` \
+    coreutils \
     `# curl: https://curl.haxx.se/` \
     curl \
     `# grep: http://www.gnu.org/software/grep/` \
