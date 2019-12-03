@@ -1,7 +1,22 @@
 #!/usr/bin/env bash
 
+# Source scripts in /etc/entrypoint.source.d
+for file in $( find /etc/entrypoint.source.d/ -name '*.sh' -type f | sort -u ); do
+    source "${file}"
+done
+
 # Run scripts in /etc/entrypoint.d
 for file in $( find /etc/entrypoint.d/ -name '*.sh' -type f | sort -u ); do
+    bash "${file}"
+done
+
+# Run scripts in /startup.1.d
+for file in $( find /startup.1.d/ -name '*.sh' -type f | sort -u ); do
+    bash "${file}"
+done
+
+# Run scripts in /startup.2.d
+for file in $( find /startup.2.d/ -name '*.sh' -type f | sort -u ); do
     bash "${file}"
 done
 
