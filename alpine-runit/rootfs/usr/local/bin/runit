@@ -260,8 +260,6 @@ case "$1" in
 
     # By default excecute the command
     *)
-        # Display the container banner
-        cat /banner
         # Excecute the command
         exec "$@"
     ;;

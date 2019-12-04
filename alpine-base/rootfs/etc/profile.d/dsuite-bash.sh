@@ -21,7 +21,7 @@ _ps1_clr_reset="\[\e[m\]"
 
 #
 function _ps1_exit_status() {
-  if [[ "$?" == "0" ]]; then
+  if [ "$?" == "0" ]; then
     printf "${_clr_green}>>${_clr_reset}"
   else
     printf "${_clr_red}>>${_clr_reset}"
