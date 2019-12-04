@@ -14,7 +14,7 @@ RUN \
     # Update repository indexes
     && apk update \
     # Run the install script
-    && sh /tmp/install-base.sh \
+    && sh /tmp/install-base.sh local \
     # intsall packages
     && apk-install gnupg \
 	# Clear apk's cache

@@ -26,10 +26,12 @@ curl -s -o /usr/local/lib/bash-logger.sh https://raw.githubusercontent.com/bash-
 curl -s -o /usr/local/lib/persist-env.sh https://raw.githubusercontent.com/bash-suite/persist-env/master/persist-env.sh
 
 # Download root files
-if [ -n "$GH_TOKEN" ]; then
-    sh /usr/local/sbin/gh-downloader -T=$GH_TOKEN -u=docker-suite -r=Install-Scripts -p=alpine-base/rootfs -o=/
-else
-    sh /usr/local/sbin/gh-downloader -u=docker-suite -r=Install-Scripts -p=alpine-base/rootfs -o=/
+if [ -z "$1" ]; then
+    if [ -n "$GH_TOKEN" ]; then
+        sh /usr/local/sbin/gh-downloader -T=$GH_TOKEN -u=docker-suite -r=Install-Scripts -p=alpine-base/rootfs -o=/
+    else
+        sh /usr/local/sbin/gh-downloader -u=docker-suite -r=Install-Scripts -p=alpine-base/rootfs -o=/
+    fi
 fi
 
 # Make bin and sbin files accessible and executable
@@ -41,11 +43,11 @@ fi
 [ "$(ls /startup.2.d | wc -l)" -gt "0" ] && chmod 0755 /startup.2.d/*.sh
 
 # Make entrypoint accessible and executable
-chmod 0755 /etc/entrypoint.d/*
+chmod 0755 /etc/entrypoint.d/*.sh
 chmod 0755 /entrypoint.sh
 
 # Clean .gitkeep files
-find /etc/entrypoint.source.d -maxdepth 1 -type f -iname '\.gitkeep' -delete
+find /startup.d -maxdepth 1 -type f -iname '\.gitkeep' -delete
 find /startup.1.d -maxdepth 1 -type f -iname '\.gitkeep' -delete
 find /startup.2.d -maxdepth 1 -type f -iname '\.gitkeep' -delete
 

@@ -18,7 +18,7 @@ if [ -f /tmp/install-base.sh ]; then
 fi
 
 # Download alpine-runit files if needded
-if [ ! -d /etc/runit ]; then
+if [ -z "$1" ]; then
     if [ -n "$GH_TOKEN" ]; then
         gh-downloader -T=$GH_TOKEN -u=docker-suite -r=Install-Scripts -p=alpine-runit/rootfs -o=/
     else
@@ -31,7 +31,7 @@ fi
 [ $(ls /usr/local/sbin | wc -l) -gt 0 ] && chmod 0755 /usr/local/sbin/*
 
 # Make entrypoint accessible and executable
-chmod 0755 /etc/entrypoint.d/*
+chmod 0755 /etc/entrypoint.d/*.sh
 chmod 0755 -R /etc/runit/*
 chmod 0755 /entrypoint.sh
 
