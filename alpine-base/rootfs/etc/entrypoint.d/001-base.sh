@@ -8,7 +8,8 @@ source /usr/local/lib/uid-gid.sh
 # Debug level
 env_set "DEBUG_LEVEL" $(env_get "DEBUG_LEVEL" "NOTICE")
 env_set "LOG_LEVEL" $(LOG_LEVEL_VALUE ${DEBUG_LEVEL})
-LOG info "Debug level set to $(LOG_LEVEL_NAME ${LOG_LEVEL})"
+export LOG_FORMAT='%DATE %PID [%LEVEL] %MESSAGE'
+INFO "Debug level set to $(LOG_LEVEL_NAME ${LOG_LEVEL})"
 
 # Envs
 env_set DST_USER "dsuite"
@@ -22,9 +23,9 @@ NEW_GID=$(env_get "NEW_GID")
 env_reload
 
 ## Default User/Group
-[ -z "$(getent group "$DST_GID")" ] && addgroup -S -g "${DST_GID}" "${DST_GROUP}"
-[ -z "$(getent passwd "$DST_UID")" ] && adduser -S -u "${DST_UID}" -G "${DST_GROUP}" -s /bin/sh "${DST_USER}"
+[ -z "$(getent group "$DST_GID")" ] && addgroup -S -g "${DST_GID}" "${DST_GROUP}" || true
+[ -z "$(getent passwd "$DST_UID")" ] && adduser -S -u "${DST_UID}" -G "${DST_GROUP}" -s /bin/sh "${DST_USER}" || true
 
 # Modify User/Group
-[ -n "${NEW_UID}" ] && set_uid "${NEW_UID}" "${DST_USER}" "/home/${DST_USER}"
-[ -n "${NEW_GID}" ] && set_gid "${NEW_GID}" "${DST_GROUP}" "/home/${DST_USER}"
+[ -n "${NEW_UID}" ] && set_uid "${NEW_UID}" "${DST_USER}" "/home/${DST_USER}" || true
+[ -n "${NEW_GID}" ] && set_gid "${NEW_GID}" "${DST_GROUP}" "/home/${DST_USER}" || true

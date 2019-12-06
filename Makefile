@@ -6,7 +6,7 @@ DIR:=$(strip $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST)))))
 build: build-base build-runit
 
 build-base:
-	docker build \
+	@docker build \
 		--build-arg http_proxy=${http_proxy} \
 		--build-arg https_proxy=${https_proxy} \
 		--file tests/dockerfiles/Dockerfile-base.test \
@@ -14,7 +14,7 @@ build-base:
 		.
 
 build-runit:
-	docker build \
+	@docker build \
 		--build-arg http_proxy=${http_proxy} \
 		--build-arg https_proxy=${https_proxy} \
 		--file tests/dockerfiles/Dockerfile-runit.test \
@@ -25,7 +25,7 @@ build-runit:
 test: test-base test-runit
 
 test-base: build-base
-	docker run -t --rm \
+	@docker run -t --rm \
 		-e http_proxy=${http_proxy} \
 		-e https_proxy=${https_proxy} \
 		-v $(DIR)/tests/alpine-base:/goss \
@@ -33,7 +33,7 @@ test-base: build-base
 		-v /var/run/docker.sock:/var/run/docker.sock \
 		dsuite/goss:latest \
 		dgoss run -e NEW_UID=1005 -e http_proxy=${http_proxy} -e https_proxy=${https_proxy} --entrypoint=/goss/entrypoint.sh $(DOCKER_BASE)
-	docker run -t --rm \
+	@docker run -t --rm \
 		-e http_proxy=${http_proxy} \
 		-e https_proxy=${https_proxy} \
 		-e GOSS_SLEEP=2 \
@@ -55,16 +55,18 @@ test-runit: test-base build-runit
 
 
 shell-base: build-base
-	docker run -it --rm \
+	@docker run -it --rm \
 		-e http_proxy=${http_proxy} \
 		-e https_proxy=${https_proxy} \
 		-e DEBUG_LEVEL=DEBUG \
+		-e NEW_UID=1005 \
+		-e NEW_GID=1005 \
 		--name base-test \
 		$(DOCKER_BASE) \
 		bash
 
 shell-runit: build-runit
-	docker run -it --rm \
+	@docker run -it --rm \
 		-e http_proxy=${http_proxy} \
 		-e https_proxy=${https_proxy} \
 		-e DEBUG_LEVEL=DEBUG \

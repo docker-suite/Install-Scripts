@@ -25,8 +25,8 @@ if [ -n "$(ls -A /etc/service.d)" ]; then
         _servicename=$(basename ${_dir})
         # However, this service should not also be disabled
         if [ ! -e "/etc/service.d/${_servicename}/disable" ]; then
-            ln -s ${_dir} /etc/service/
             INFO "[RUNIT]    Enabling service: ${_servicename}"
+            ln -s ${_dir} /etc/service/
         fi
     done
 fi

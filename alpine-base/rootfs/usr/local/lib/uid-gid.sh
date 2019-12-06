@@ -18,20 +18,20 @@ set_uid() {
 	local spare_uid=9876	# spare uid to change another user to
 
     if ! isint "${uid}"; then
-        LOG error "\$'${uid}' is not an integer"
+        ERROR "\$'${uid}' is not an integer"
         exit 1
     else
         # Username with this uid already exists
         if target_username="$( getusernamebyuid "${uid}" )"; then
             # It is not our user, so we need to changes his/her uid to something else first
             if [ "${target_username}" != "${username}" ]; then
-                LOG waring "User with ${uid} already exists: ${target_username}"
-                LOG info "Changing UID of ${target_username} to ${spare_uid}"
+                WARNING "User with ${uid} already exists: ${target_username}"
+                INFO "Changing UID of ${target_username} to ${spare_uid}"
                 LOG_RUN "usermod -u ${spare_uid} ${target_username}"
             fi
         fi
         # Change uid and fix homedir permissions
-        LOG info "Changing user '${username}' uid to: ${uid}"
+        INFO "Changing user '${username}' uid to: ${uid}"
         LOG_RUN "usermod -u ${uid} ${username}"
         LOG_RUN "chown -R ${username} ${homedir}"
     fi
@@ -52,20 +52,20 @@ set_gid() {
 	local spare_gid=9876	# spare gid to change another group to
 
     if ! isint "${gid}"; then
-        LOG error "\$'${gid}' is not an integer"
+        ERROR "\$'${gid}' is not an integer"
         exit 1
     else
         # Groupname with this gid already exists
         if target_groupname="$( getgroupnamebygid "${gid}" )"; then
             # It is not our group, so we need to changes his/her gid to something else first
             if [ "${target_groupname}" != "${groupname}" ]; then
-                LOG waring "Group with ${gid} already exists: ${target_groupname}"
-                LOG info "Changing GID of ${target_groupname} to ${spare_gid}"
+                WARNING "Group with ${gid} already exists: ${target_groupname}"
+                INFO "Changing GID of ${target_groupname} to ${spare_gid}"
                 LOG_RUN "groupmod -g ${spare_gid} ${target_groupname}"
             fi
         fi
         # Change ugd and fix homedir permissions
-        LOG info "Changing group '${groupname}' gid to: ${gid}"
+        INFO "Changing group '${groupname}' gid to: ${gid}"
         LOG_RUN "groupmod -g ${gid} ${groupname}"
         LOG_RUN "chown -R :${groupname} ${homedir}"
      fi

@@ -11,7 +11,7 @@ BOOT_DELAY=$(env_get "BOOT_DELAY")
 if [ -n "${BOOT_DELAY}" ]; then
     if isint "${BOOT_DELAY}"; then
         if [ "${BOOT_DELAY}" -gt "0" ]; then
-            LOG info "Boot delayed of ${BOOT_DELAY} second(s)"
+            INFO  "Boot delayed of ${BOOT_DELAY} second(s)"
             sleep ${BOOT_DELAY}
         fi
     fi

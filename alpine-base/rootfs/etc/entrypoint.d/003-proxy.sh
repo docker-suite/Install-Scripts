@@ -23,10 +23,10 @@ _set_proxy() {
     [ -n "$HTTPS_PROXY" ] && [ -z "$(echo $HTTPS_PROXY | grep '^http')" ] && HTTPS_PROXY="https://"$HTTPS_PROXY
 
     # Export
-    [ -n "$http_proxy"  ] && env_set http_proxy "$http_proxy"   && LOG info "http_proxy set to : $http_proxy"
-    [ -n "$HTTP_PROXY"  ] && env_set HTTP_PROXY "$HTTP_PROXY"   && LOG info "HTTP_PROXY set to : $HTTP_PROXY"
-    [ -n "$https_proxy" ] && env_set https_proxy "$https_proxy" && LOG info "https_proxy set to : $https_proxy"
-    [ -n "$HTTPS_PROXY" ] && env_set HTTPS_PROXY "$HTTPS_PROXY" && LOG info "HTTPS_PROXY set to : $HTTPS_PROXY"
+    [ -n "$http_proxy"  ] && env_set http_proxy "$http_proxy"   && INFO "http_proxy set to : $http_proxy"
+    [ -n "$HTTP_PROXY"  ] && env_set HTTP_PROXY "$HTTP_PROXY"   && INFO "HTTP_PROXY set to : $HTTP_PROXY"
+    [ -n "$https_proxy" ] && env_set https_proxy "$https_proxy" && INFO "https_proxy set to : $https_proxy"
+    [ -n "$HTTPS_PROXY" ] && env_set HTTPS_PROXY "$HTTPS_PROXY" && INFO "HTTPS_PROXY set to : $HTTPS_PROXY"
 
     return 0
 }
