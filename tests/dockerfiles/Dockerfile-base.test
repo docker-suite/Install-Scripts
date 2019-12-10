@@ -15,9 +15,9 @@ RUN \
 	set -x \
     # Group
     && addgroup -S -g "${DST_GID}" "${DST_GROUP}" \
-    # User \
+    # User
     && adduser -S -D -u "${DST_UID}" -G "${DST_GROUP}" -s /bin/bash "${DST_USER}" \
-    # Add user to sudoers
+    # Make our user like sudo
     && echo "${DST_USER} ALL=(ALL) ALL" >> /etc/sudoers \
     && echo "${DST_USER} ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
