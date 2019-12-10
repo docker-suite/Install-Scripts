@@ -5,4 +5,4 @@
 #               replacing or downgrading packages (instead of holding them)
 #               if the currently installed package is no longer available
 #               from any repository
-apk upgrade --available ${@}
+apk upgrade --available "${@}"

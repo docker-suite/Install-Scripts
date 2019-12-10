@@ -3,7 +3,7 @@
 # set -e : Exit the script if any statement returns a non-true return value.
 set -e
 
-readonly PROGNAME=$(basename $0)
+readonly PROGNAME=$(basename "$0")
 
 if [ $# -ne 2 ]; then
     echo "${PROGNAME} <signature> <file>"

@@ -2,4 +2,4 @@
 
 # Update repository indexes from all remote repositories
 # --update-cache : Update the repository cache
-apk update --update-cache ${@}
+apk update --update-cache "${@}"

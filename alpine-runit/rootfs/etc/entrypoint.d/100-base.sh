@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
-
-# Add libraries
-source /usr/local/lib/persist-env.sh
+# shellcheck disable=SC2016
 
 # Change log format for bash-logger
 env_set LOG_FORMAT '%MESSAGE'

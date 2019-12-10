@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# shellcheck disable=SC1091
+
 # Add libraries
 source /usr/local/lib/bash-logger.sh
 

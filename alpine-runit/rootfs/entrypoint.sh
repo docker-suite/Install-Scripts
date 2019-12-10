@@ -1,29 +1,30 @@
 #!/usr/bin/env bash
-source /usr/local/lib/bash-logger.sh
+# shellcheck disable=SC1090
 
-# Run scripts in /etc/entrypoint.d
+###
+### Source libs
+###
 for file in $( find /etc/entrypoint.d/ -name '*.sh' -type f | sort -u ); do
-    DEBUG "Running ${file}"
-    bash ${file}
+    source "${file}"
 done
 
-# Source scripts in /startup.d
-for file in $( find /startup.d/ -name '*.sh' -type f | sort -u ); do
-    DEBUG "Sourcing ${file}"
-    source ${file}
-done
+###
+### Source custom user supplied libs
+###
+source_scripts "/startup.d"
 
-# Run scripts in /startup.1.d
-for file in $( find /startup.1.d/ -name '*.sh' -type f | sort -u ); do
-    DEBUG "Running ${file}"
-    bash ${file}
-done
+###
+### Run custom user supplied scripts
+###
+execute_scripts "/startup.1.d"
+execute_scripts "/startup.2.d"
 
-# Run scripts in /startup.2.d
-for file in $( find /startup.2.d/ -name '*.sh' -type f | sort -u ); do
-    DEBUG "Running ${file}"
-    bash ${file}
-done
+###
+### Run with the correct user
+###
+if [ -n "$USER" ]; then
+    set -- su-exec "$USER" "$@"
+fi
 
 # Execute script with arguments
 exec tini -- /usr/local/bin/runit "${@}"

@@ -28,28 +28,28 @@ curl -s -o /usr/local/lib/persist-env.sh https://raw.githubusercontent.com/bash-
 # Download root files
 if [ -z "$1" ]; then
     if [ -n "$GH_TOKEN" ]; then
-        sh /usr/local/sbin/gh-downloader -T=$GH_TOKEN -u=docker-suite -r=Install-Scripts -p=alpine-base/rootfs -o=/
+        sh /usr/local/sbin/gh-downloader -T="$GH_TOKEN" -u=docker-suite -r=Install-Scripts -p=alpine-base/rootfs -o=/
     else
         sh /usr/local/sbin/gh-downloader -u=docker-suite -r=Install-Scripts -p=alpine-base/rootfs -o=/
     fi
 fi
 
 # Make bin and sbin files accessible and executable
-[ "$(ls /usr/local/bin | wc -l)" -gt "0" ] && chmod 0755 /usr/local/bin/*
-[ "$(ls /usr/local/sbin | wc -l)" -gt "0" ] && chmod 0755 /usr/local/sbin/*
+[ "$(find /usr/local/bin -type f  | wc -l)" -gt "0" ] && chmod 0755 /usr/local/bin/*
+[ "$(find /usr/local/sbin -type f | wc -l)" -gt "0" ] && chmod 0755 /usr/local/sbin/*
 
-# Make startup scripts accessible and executable
-[ "$(ls /startup.1.d | wc -l)" -gt "0" ] && chmod 0755 /startup.1.d/*.sh
-[ "$(ls /startup.2.d | wc -l)" -gt "0" ] && chmod 0755 /startup.2.d/*.sh
+# # Make startup scripts accessible and executable
+[ -d /startup.1.d ] && [ "$(find /startup.1.d -name '*.sh' -type f | wc -l)" -gt "0" ] && chmod 0755 /startup.1.d/*.sh
+[ -d /startup.2.d ] && [ "$(find /startup.2.d -name '*.sh' -type f | wc -l)" -gt "0" ] && chmod 0755 /startup.2.d/*.sh
 
 # Make entrypoint accessible and executable
 chmod 0755 /etc/entrypoint.d/*.sh
 chmod 0755 /entrypoint.sh
 
 # Clean .gitkeep files
-find /startup.d -maxdepth 1 -type f -iname '\.gitkeep' -delete
-find /startup.1.d -maxdepth 1 -type f -iname '\.gitkeep' -delete
-find /startup.2.d -maxdepth 1 -type f -iname '\.gitkeep' -delete
+[ -d /startup.d ]   && find /startup.d -maxdepth 1 -type f -iname '\.gitkeep' -delete
+[ -d /startup.1.d ] && find /startup.1.d -maxdepth 1 -type f -iname '\.gitkeep' -delete
+[ -d /startup.2.d ] && find /startup.2.d -maxdepth 1 -type f -iname '\.gitkeep' -delete
 
 # Add packages
 apk-install --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ \

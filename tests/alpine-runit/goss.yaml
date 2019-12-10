@@ -64,22 +64,6 @@ file:
     exists: true
     mode: "0755"
     filetype: file
-  /etc/entrypoint.d/001-base.sh:
-    exists: true
-    mode: "0755"
-    filetype: file
-  /etc/entrypoint.d/002-bootdelay.sh:
-    exists: true
-    mode: "0755"
-    filetype: file
-  /etc/entrypoint.d/003-proxy.sh:
-    exists: true
-    mode: "0755"
-    filetype: file
-  /etc/entrypoint.d/004-timezone.sh:
-    exists: true
-    mode: "0755"
-    filetype: file
 
 package:
   bash:

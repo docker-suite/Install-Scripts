@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 
-# Add libraries
-source /usr/local/lib/bash-logger.sh
-source /usr/local/lib/persist-env.sh
+# shellcheck disable=SC2143
+# shellcheck disable=SC2155
 
+## Depending on the platform thpe proxy can be declared as http_proxy or HTTP_PROXY
+## This function will check the 2 formats.
 _set_proxy() {
     local http_proxy=$(env_get "http_proxy")
     local https_proxy=$(env_get "https_proxy")
@@ -17,10 +18,10 @@ _set_proxy() {
     [ -n "$HTTPS_PROXY" ] && [ -z "$https_proxy" ] && https_proxy="$HTTPS_PROXY"
 
     # Make sure that proxy begin with http or https
-    [ -n "$http_proxy"  ] && [ -z "$(echo $http_proxy | grep '^http')"  ] && http_proxy="http://"$http_proxy
-    [ -n "$HTTP_PROXY"  ] && [ -z "$(echo $HTTP_PROXY | grep '^http')"  ] && HTTP_PROXY="http://"$HTTP_PROXY
-    [ -n "$https_proxy" ] && [ -z "$(echo $https_proxy | grep '^http')" ] && https_proxy="https://"$https_proxy
-    [ -n "$HTTPS_PROXY" ] && [ -z "$(echo $HTTPS_PROXY | grep '^http')" ] && HTTPS_PROXY="https://"$HTTPS_PROXY
+    [ -n "$http_proxy"  ] && [ -z "$(echo "$http_proxy" | grep '^http')"  ] && http_proxy="http://"$http_proxy
+    [ -n "$HTTP_PROXY"  ] && [ -z "$(echo "$HTTP_PROXY" | grep '^http')"  ] && HTTP_PROXY="http://"$HTTP_PROXY
+    [ -n "$https_proxy" ] && [ -z "$(echo "$https_proxy" | grep '^http')" ] && https_proxy="https://"$https_proxy
+    [ -n "$HTTPS_PROXY" ] && [ -z "$(echo "$HTTPS_PROXY" | grep '^http')" ] && HTTPS_PROXY="https://"$HTTPS_PROXY
 
     # Export
     [ -n "$http_proxy"  ] && env_set http_proxy "$http_proxy"   && INFO "http_proxy set to : $http_proxy"
