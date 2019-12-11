@@ -25,9 +25,13 @@ USER=$(env_get "USER")
 ([ -n "${NEW_UID}" ] && set_uid "${NEW_UID}" "${NEW_USER}" "/home/${DST_USER}") || true
 ([ -n "${NEW_GID}" ] && set_gid "${NEW_GID}" "${NEW_GROUP}" "/home/${DST_USER}") || true
 
-## Auto load /etc/profile
+## Auto load /etc/profile for all known users
 echo "source /etc/profile" > /root/.ashrc
 echo "source /etc/profile" > /root/.bashrc
-echo "source /etc/profile" > /home/${DST_USER}/.ashrc
-echo "source /etc/profile" > /home/${DST_USER}/.bashrc
+echo "source /etc/profile" > "/home/${DST_USER}/.ashrc"
+echo "source /etc/profile" > "/home/${DST_USER}/.bashrc"
+if [ ! "$USER" = "" ] && [ -d "/home/${USER}" ]; then
+    echo "source /etc/profile" > "/home/${USER}/.ashrc"
+    echo "source /etc/profile" > "/home/${USER}/.bashrc"
+fi
 
