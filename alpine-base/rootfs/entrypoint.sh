@@ -20,11 +20,19 @@ execute_scripts "/startup.1.d"
 execute_scripts "/startup.2.d"
 
 ###
-### Run with the correct user
+### Execute only if arguments exist
 ###
-if [ -n "$USER" ]; then
-    set -- su-exec "$USER" "$@"
-fi
+if [ ! "$#" = "0" ]; then
+    ###
+    ### Run with the correct user
+    ###
+    if [ -n "$USER" ]; then
+        set -- su-exec "$USER" "$@"
+    fi
 
-# Execute script with arguments
-exec tini -- "${@}"
+    ###
+    ### Execute script with arguments
+    ###
+    # Execute script with arguments
+    exec tini -- "${@}"
+fi
