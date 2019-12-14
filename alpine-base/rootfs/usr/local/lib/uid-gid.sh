@@ -6,7 +6,7 @@
 source /usr/local/lib/bash-logger.sh
 
 # Change user UID
-# Eg: set_uid 1000 "${MY_USER}" "/home/${MY_USER}" "${DEBUG_LEVEL}"
+# Eg: set_uid 1000 "${MY_USER}" "/home/${MY_USER}"
 #----------------------------------------------------------------------------------------------------------------------
 set_uid() {
     if [ $# -lt 3 ]; then
@@ -28,19 +28,19 @@ set_uid() {
             # It is not our user, so we need to changes his/her uid to something else first
             if [ "${target_username}" != "${username}" ]; then
                 WARNING "User with ${uid} already exists: ${target_username}"
-                INFO "Changing UID of ${target_username} to ${spare_uid}"
+                INFO "Changing UID of '${target_username}' to '${spare_uid}'"
                 LOG_RUN "usermod -u ${spare_uid} ${target_username}"
             fi
         fi
         # Change uid and fix homedir permissions
-        INFO "Changing user '${username}' uid to: ${uid}"
+        INFO "Changing user '${username}' uid to '${uid}'"
         LOG_RUN "usermod -u ${uid} ${username}"
         LOG_RUN "chown -R ${username} ${homedir}"
     fi
 }
 
 # Change group GID
-# Eg: set_gid 1000 "${MY_GROUP}" "/home/${MY_USER}" "${DEBUG_LEVEL}"
+# Eg: set_gid 1000 "${MY_GROUP}" "/home/${MY_USER}"
 #----------------------------------------------------------------------------------------------------------------------
 set_gid() {
     if [ $# -lt 3 ]; then
@@ -62,12 +62,12 @@ set_gid() {
             # It is not our group, so we need to changes his/her gid to something else first
             if [ "${target_groupname}" != "${groupname}" ]; then
                 WARNING "Group with ${gid} already exists: ${target_groupname}"
-                INFO "Changing GID of ${target_groupname} to ${spare_gid}"
+                INFO "Changing GID of '${target_groupname}' to '${spare_gid}'"
                 LOG_RUN "groupmod -g ${spare_gid} ${target_groupname}"
             fi
         fi
         # Change ugd and fix homedir permissions
-        INFO "Changing group '${groupname}' gid to: ${gid}"
+        INFO "Changing group '${groupname}' gid to '${gid}'"
         LOG_RUN "groupmod -g ${gid} ${groupname}"
         LOG_RUN "chown -R :${groupname} ${homedir}"
      fi

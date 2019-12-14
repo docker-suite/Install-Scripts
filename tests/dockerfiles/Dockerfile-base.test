@@ -2,25 +2,6 @@ FROM alpine
 
 ENV ALPINE_BASE=1
 
-## dsuite user
-ENV DST_USER="dsuite" \
-	DST_GROUP="dsuite" \
-	DST_UID="1000" \
-	DST_GID="1000" \
-    USER="dsuite"
-
-## Create dsuite user and group
-RUN \
-	# Print executed commands
-	set -x \
-    # Group
-    && addgroup -S -g "${DST_GID}" "${DST_GROUP}" \
-    # User
-    && adduser -S -D -u "${DST_UID}" -G "${DST_GROUP}" -s /bin/bash "${DST_USER}" \
-    # Make our user like sudo
-    && echo "${DST_USER} ALL=(ALL) ALL" >> /etc/sudoers \
-    && echo "${DST_USER} ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-
 ## Copy files
 COPY alpine-base/rootfs /
 COPY alpine-base/install-base.sh /tmp/install-base.sh
@@ -38,7 +19,7 @@ RUN \
 	# Clear apk's cache
 	&& apk-cleanup
 
-## Examples
+## Copy files
 COPY tests/alpine-base/rootfs /
 
 ## Entrypoint
