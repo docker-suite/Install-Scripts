@@ -22,8 +22,8 @@ test: ## Test base and runit image
 	@$(MAKE) test-runit
 
 shell: ## Run shell ( usage : make shell v="base" Or make shell v="runit")
-	$(eval version := $(or $(v),"base"))
-	if [ "$(version)" = "base" ]; then $(MAKE) shell-base; else $(MAKE) shell-runit; fi
+	$(eval version := $(or $(v), base))
+	@if [ "$(version)" = "base" ]; then $(MAKE) shell-base; else $(MAKE) shell-runit; fi
 
 remove:  ## Remove images
 	@$(MAKE) remove-base

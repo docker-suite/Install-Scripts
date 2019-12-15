@@ -38,11 +38,12 @@ fi
 [ "$(find /usr/local/bin -type f  | wc -l)" -gt "0" ] && chmod 0755 /usr/local/bin/*
 [ "$(find /usr/local/sbin -type f | wc -l)" -gt "0" ] && chmod 0755 /usr/local/sbin/*
 
-# # Make startup scripts accessible and executable
+# Make startup scripts accessible and executable
+[ -d /startup.d ]   && [ "$(find /startup.d -name '*.sh' -type f | wc -l)" -gt "0" ]   && chmod 0755 /startup.d/*.sh
 [ -d /startup.1.d ] && [ "$(find /startup.1.d -name '*.sh' -type f | wc -l)" -gt "0" ] && chmod 0755 /startup.1.d/*.sh
 [ -d /startup.2.d ] && [ "$(find /startup.2.d -name '*.sh' -type f | wc -l)" -gt "0" ] && chmod 0755 /startup.2.d/*.sh
 
-# Make entrypoint accessible and executable
+# Make entrypoint.d scripts accessible and executable
 chmod 0755 /etc/entrypoint.d/*.sh
 chmod 0755 /entrypoint.sh
 
