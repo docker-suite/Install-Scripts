@@ -19,7 +19,7 @@ NEW_HOME=$(env_get "NEW_HOME" "$DST_HOME")
 USER=$(env_get "USER")
 
 ## Create default group
-([[ -z "$(getent group "$DST_GID")" ]] && addgroup -S -g "${DST_GID}" "${DST_GROUP}") || true
+([[ -z "$(getent group "$DST_GID")" ]] && [[ -z "$(getent group "$DST_GROUP")" ]]  && addgroup -S -g "${DST_GID}" "${DST_GROUP}") || true
 
 ## Create default user
 ([[ -z "$(getent passwd "$DST_UID")" ]] && adduser -S -D -u "${DST_UID}" -G "${DST_GROUP}" -h "$DST_HOME" -s /bin/bash "${DST_USER}") || true
