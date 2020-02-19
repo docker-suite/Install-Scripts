@@ -65,15 +65,6 @@ runit service MyService status
 runit stop
 ```
 
-
-## ![](https://github.com/docker-suite/artwork/raw/master/various/pin/png/pin_16.png) A cron service
-
-A cron service is included, however it is not enable by default.  
-To enable it, just create the file `enable` in /etc/service.d/cron : `touch /etc/service.d/cron/enable`  
-Add your cron file into `/etc/crontabs` and it will automatically be added to `/etc/crontabs/root`  
-An example can be found in the [example folder](https://github.com/docker-suite/alpine-runit/tree/master/.example).
-
-
 ## ![](https://github.com/docker-suite/artwork/raw/master/various/pin/png/pin_16.png) An example
 
 Have a look at the [example folder](https://github.com/docker-suite/alpine-runit/tree/master/.example). You'll find out how to create an image based on [dsuite/alpine-runit][alpine-runit]

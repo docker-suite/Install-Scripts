@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC1091
+# shellcheck disable=SC2044
+# shellcheck disable=SC2086
 
 #
 # Enable all services wich contain the file enable
