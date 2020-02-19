@@ -40,6 +40,7 @@ fi
 
 # Add more cron period
 chmod 600 /etc/crontabs/root
+mkdir -p /etc/periodic/5min
 mkdir -p /etc/periodic/daily_1am
 mkdir -p /etc/periodic/daily_2am
 mkdir -p /etc/periodic/daily_3am
