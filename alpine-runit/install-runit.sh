@@ -37,7 +37,9 @@ chmod 0755 /entrypoint.sh
 
 # Add packages
 apk-install --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ \
-    `# runit: http://smarden.org/runit/` \
-    runit \
+        `# runit: http://smarden.org/runit/` \
+        runit \
+        `# https://github.com/logrotate/logrotate` \
+        logrotate\
     && rm -f /sbin/runit \
     && rm -f /sbin/runit-init
