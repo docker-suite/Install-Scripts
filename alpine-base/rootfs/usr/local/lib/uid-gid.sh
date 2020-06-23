@@ -29,13 +29,13 @@ set_uid() {
             if [ "${target_username}" != "${username}" ]; then
                 WARNING "User with ${uid} already exists: ${target_username}"
                 INFO "Changing UID of '${target_username}' to '${spare_uid}'"
-                LOG_RUN "usermod -u ${spare_uid} ${target_username}"
+                usermod -u "${spare_uid}" "${target_username}"
             fi
         fi
         # Change uid and fix homedir permissions
         INFO "Changing user '${username}' uid to '${uid}'"
-        LOG_RUN "usermod -u ${uid} ${username}"
-        LOG_RUN "chown -R ${username} ${homedir}"
+        usermod -u "${uid}" "${username}"
+        chown -R "${username}" "${homedir}"
     fi
 }
 
@@ -63,13 +63,13 @@ set_gid() {
             if [ "${target_groupname}" != "${groupname}" ]; then
                 WARNING "Group with ${gid} already exists: ${target_groupname}"
                 INFO "Changing GID of '${target_groupname}' to '${spare_gid}'"
-                LOG_RUN "groupmod -g ${spare_gid} ${target_groupname}"
+                groupmod -g "${spare_gid}" "${target_groupname}"
             fi
         fi
         # Change ugd and fix homedir permissions
         INFO "Changing group '${groupname}' gid to '${gid}'"
-        LOG_RUN "groupmod -g ${gid} ${groupname}"
-        LOG_RUN "chown -R :${groupname} ${homedir}"
+        groupmod -g "${gid}" "${groupname}"
+        chown -R :"${groupname}" "${homedir}"
      fi
 }
 

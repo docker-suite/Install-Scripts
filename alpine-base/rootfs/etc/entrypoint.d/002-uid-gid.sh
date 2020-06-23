@@ -19,42 +19,48 @@ NEW_HOME=$(env_get "NEW_HOME" "$DST_HOME")
 USER=$(env_get "USER")
 
 ## Create default group
-([[ -z "$(getent group "$DST_GID")" ]] && [[ -z "$(getent group "$DST_GROUP")" ]]  && addgroup -S -g "${DST_GID}" "${DST_GROUP}") || true
+if [[ -z "$(getent group "$DST_GID")" ]] && [[ -z "$(getent group "$DST_GROUP")" ]]; then
+    DEBUG "Adding group '${DST_GROUP}' with id '${DST_GID}'"
+    addgroup -S -g "${DST_GID}" "${DST_GROUP}"
+fi
 
 ## Create default user
-([[ -z "$(getent passwd "$DST_UID")" ]] && adduser -S -D -u "${DST_UID}" -G "${DST_GROUP}" -h "$DST_HOME" -s /bin/bash "${DST_USER}") || true
+if [[ -z "$(getent passwd "$DST_UID")" ]] && [[ -z "$(getent passwd "$DST_USER")" ]] && [[ -n "$(getent group "$DST_GROUP")" ]]; then
+    DEBUG "Adding user '${DST_USER}' with id '${DST_UID}' to group '${DST_GROUP}'"
+    adduser -S -D -u "${DST_UID}" -G "${DST_GROUP}" -h "$DST_HOME" -s /bin/bash "${DST_USER}"
+fi
 
 ## Rename user
-if [[  ! "$NEW_USER" = "$DST_USER"  ]] && [[ -z "$(getent passwd "$NEW_USER")" ]]; then
+if [[  ! "$NEW_USER" = "$DST_USER"  ]] && [[ -z "$(getent passwd "$NEW_USER")" ]]&& [[ -n "$(getent passwd "$DST_USER")" ]]; then
     DEBUG "Rename user '${DST_USER}' to '${NEW_USER}'"
-    LOG_RUN "usermod -l $NEW_USER $DST_USER"
+    usermod -l "$NEW_USER" "$DST_USER"
 fi
 
 ## Rename group
-if [[  ! "$NEW_GROUP" = "$DST_GROUP"  ]] && [[ -z "$(getent group "$NEW_GROUP")" ]]; then
+if [[  ! "$NEW_GROUP" = "$DST_GROUP"  ]] && [[ -z "$(getent group "$NEW_GROUP")" ]] && [[ -n "$(getent group "$DST_GROUP")" ]]; then
     DEBUG "Rename group '${DST_GROUP}' to ${NEW_GROUP}"
-    LOG_RUN "groupmod -n $NEW_GROUP $DST_GROUP"
+    groupmod -n "$NEW_GROUP" "$DST_GROUP"
 else
     if [[  ! "$NEW_GROUP" = "$DST_GROUP"  ]]; then
         DEBUG "Add user '$NEW_USER' to group '$NEW_GROUP'"
-        LOG_RUN "adduser $NEW_USER $NEW_GROUP"
+        adduser "$NEW_USER" "$NEW_GROUP"
     fi
 fi
 
 
 ## Rename home location
 if [[  ! "$NEW_HOME" = "$DST_HOME"  ]] && [[ ! -d "$NEW_HOME" ]]; then
-    DEBUG "Change home location '${NEW_USER}' to ${NEW_HOME}"
-    LOG_RUN "usermod -d $NEW_HOME -m $NEW_USER"
+    DEBUG "Change home location '${NEW_USER}' to '${NEW_HOME}'"
+    usermod -d "$NEW_HOME" -m "$NEW_USER"
 fi
 
 ## Change UID
-if [[  ! "$NEW_GID" = "$DST_GID"  ]]; then
+if [[  ! "$NEW_UID" = "$DST_UID"  ]]; then
     set_uid "${NEW_UID}" "${NEW_USER}" "${NEW_HOME}"
 fi
 
 ## Change GID
-if [[  ! "$NEW_UID" = "$DST_UID"  ]]; then
+if [[  ! "$NEW_GID" = "$DST_GID"  ]]; then
     set_gid "${NEW_GID}" "${NEW_GROUP}" "${NEW_HOME}"
 fi
 
