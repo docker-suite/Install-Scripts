@@ -39,10 +39,10 @@ Disabling a service is predominante over enabling it.
 
 Run it: `docker run -it -d --name=runit dsuite/alpine-runit`
 
-Get an sh command prompt inside the container and play with your services:
+Get an bash command prompt inside the container and play with your services:
 
 ```bash
-docker exec -it runit sh
+docker exec -it runit bash
 
 # Get help
 runit help

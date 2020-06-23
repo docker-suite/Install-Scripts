@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-# Remove cron
-sed -i '/# CRON_START/,/# CRON_STOP/d' /etc/crontabs/root
-
-exit 0

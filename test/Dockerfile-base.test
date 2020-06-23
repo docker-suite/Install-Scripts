@@ -1,15 +1,10 @@
 FROM alpine
 
-ENV ALPINE_RUNIT=1
-
-## dsuite user
-ENV USER="dsuite"
+ENV ALPINE_BASE=1
 
 ## Copy files
 COPY alpine-base/rootfs /
 COPY alpine-base/install-base.sh /tmp/install-base.sh
-COPY alpine-runit/rootfs /
-COPY alpine-runit/install-runit.sh /tmp/install-runit.sh
 
 ## Install
 RUN \
@@ -18,12 +13,14 @@ RUN \
     # Update repository indexes
     && apk update \
     # Run the install script
-    && sh /tmp/install-runit.sh local \
+    && sh /tmp/install-base.sh local \
+    # install packages
+    && apk-install gnupg \
 	# Clear apk's cache
 	&& apk-cleanup
 
-## Examples
-COPY tests/alpine-runit/rootfs /
+## Copy files
+COPY test/alpine-base/rootfs /
 
 ## Entrypoint
 ENTRYPOINT ["/entrypoint.sh"]

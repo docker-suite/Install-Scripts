@@ -23,34 +23,43 @@ test: ## Test base and runit image
 
 shell: ## Run shell ( usage : make shell v="base" Or make shell v="runit")
 	$(eval version := $(or $(v), base))
-	@if [ "$(version)" = "base" ]; then $(MAKE) shell-base; else $(MAKE) shell-runit; fi
+	@if [ "$(version)" = "base" ]; then $(MAKE) shell-base; fi
+	@if [ "$(version)" = "runit" ]; then $(MAKE) shell-runit; fi
 
 remove:  ## Remove images
 	@$(MAKE) remove-base
 	@$(MAKE) remove-runit
 
 build-base:
-	@docker build \
+	@docker build --force-rm \
 		--build-arg http_proxy=${http_proxy} \
 		--build-arg https_proxy=${https_proxy} \
-		--file tests/dockerfiles/Dockerfile-base.test \
+		--file test/Dockerfile-base.test \
 		--tag $(DOCKER_BASE) \
-		.
+		$(DIR)
 
 build-runit:
 	@docker build \
 		--build-arg http_proxy=${http_proxy} \
 		--build-arg https_proxy=${https_proxy} \
-		--file tests/dockerfiles/Dockerfile-runit.test \
+		--file test/Dockerfile-runit.test \
 		--tag $(DOCKER_RUNIT) \
-		.
+		$(DIR)
 
 test-base:
 	@$(MAKE) build-base
 	@docker run -t --rm \
 		-e http_proxy=${http_proxy} \
 		-e https_proxy=${https_proxy} \
-		-v $(DIR)/tests/alpine-base:/goss \
+		-v $(DIR)/test/alpine-base:/goss \
+		-v /tmp:/tmp \
+		-v /var/run/docker.sock:/var/run/docker.sock \
+		dsuite/goss:latest \
+		dgoss run -e http_proxy=${http_proxy} -e https_proxy=${https_proxy} --entrypoint=/goss/entrypoint.sh $(DOCKER_BASE)
+	@docker run -t --rm \
+		-e http_proxy=${http_proxy} \
+		-e https_proxy=${https_proxy} \
+		-v $(DIR)/test/alpine-base:/goss \
 		-v /tmp:/tmp \
 		-v /var/run/docker.sock:/var/run/docker.sock \
 		dsuite/goss:latest \
@@ -59,7 +68,7 @@ test-base:
 		-e http_proxy=${http_proxy} \
 		-e https_proxy=${https_proxy} \
 		-e GOSS_SLEEP=2 \
-		-v $(DIR)/tests/alpine-base:/goss \
+		-v $(DIR)/test/alpine-base:/goss \
 		-v /tmp:/tmp \
 		-v /var/run/docker.sock:/var/run/docker.sock \
 		dsuite/goss:latest \
@@ -70,7 +79,7 @@ test-runit:
 	docker run -t --rm \
 		-e http_proxy=${http_proxy} \
 		-e https_proxy=${https_proxy} \
-		-v $(DIR)/tests/alpine-runit:/goss \
+		-v $(DIR)/test/alpine-runit:/goss \
 		-v /tmp:/tmp \
 		-v /var/run/docker.sock:/var/run/docker.sock \
 		dsuite/goss:latest \
@@ -83,8 +92,6 @@ shell-base:
 		-e http_proxy=${http_proxy} \
 		-e https_proxy=${https_proxy} \
 		-e DEBUG_LEVEL=DEBUG \
-		-e NEW_UID=1005 \
-		-e NEW_GID=1005 \
 		--name base-test \
 		$(DOCKER_BASE) \
 		bash

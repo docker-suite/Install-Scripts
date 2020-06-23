@@ -7,12 +7,14 @@ set -e
 apk update
 
 # curl must be installed: https://curl.haxx.se/
-apk add --no-cache curl
+apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ \
+    curl
 
 # jq must be installed: https://stedolan.github.io/jq/
-apk add --no-cache jq
+apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ \
+    jq
 
-# Folders
+# Make sure folders exist
 mkdir -p /usr/local/bin
 mkdir -p /usr/local/lib
 mkdir -p /usr/local/sbin
@@ -25,7 +27,7 @@ curl -s -o /usr/local/sbin/mvlink https://raw.githubusercontent.com/bash-suite/m
 curl -s -o /usr/local/lib/bash-logger.sh https://raw.githubusercontent.com/bash-suite/bash-logger/master/bash-logger.sh
 curl -s -o /usr/local/lib/persist-env.sh https://raw.githubusercontent.com/bash-suite/persist-env/master/persist-env.sh
 
-# Download root files
+# Download alpine-base files if needded
 if [ -z "$1" ]; then
     if [ -n "$GH_TOKEN" ]; then
         sh /usr/local/sbin/gh-downloader -T="$GH_TOKEN" -u=docker-suite -r=Install-Scripts -p=alpine-base/rootfs -o=/
@@ -43,7 +45,7 @@ fi
 [ -d /startup.1.d ] && [ "$(find /startup.1.d -name '*.sh' -type f | wc -l)" -gt "0" ] && chmod 0755 /startup.1.d/*.sh
 [ -d /startup.2.d ] && [ "$(find /startup.2.d -name '*.sh' -type f | wc -l)" -gt "0" ] && chmod 0755 /startup.2.d/*.sh
 
-# Make entrypoint.d scripts accessible and executable
+# Make entrypoints scripts accessible and executable
 chmod 0755 /etc/entrypoint.d/*.sh
 chmod 0755 /entrypoint.sh
 
@@ -64,6 +66,8 @@ apk-install --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ \
     grep \
     `# jq: https://stedolan.github.io/jq/` \
     jq \
+    `# https://github.com/logrotate/logrotate` \
+    logrotate\
     `# procps: https://gitlab.com/procps-ng/procps/` \
     procps \
     `# sed: http://www.gnu.org/software/sed/` \

@@ -23,8 +23,9 @@ execute_scripts "/startup.2.d"
 ### Run with the correct user
 ###
 if [ -n "$USER" ]; then
+    DEBUG "Running container as $USER"
     set -- su-exec "$USER" "$@"
 fi
 
-# Execute script with arguments
+### Execute script with arguments
 exec tini -- /usr/local/bin/runit "${@}"

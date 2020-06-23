@@ -7,6 +7,9 @@
 env_set "DEBUG_LEVEL" "$(env_get "DEBUG_LEVEL" "NOTICE")"
 env_set "LOG_LEVEL" "$(LOG_LEVEL_VALUE "${DEBUG_LEVEL}")"
 
+## Don't log to file
+env_set "LOG_LOGFILE_ENABLE" "0"
+
 ## Define the log format which will be used in all dsuite images
 env_set "LOG_FORMAT" '%MESSAGE'
 

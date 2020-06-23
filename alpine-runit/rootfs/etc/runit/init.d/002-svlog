@@ -21,7 +21,7 @@ LOGGER=$(env_get LOGGER)
 [ $LOGGER = "false" ] && exit 0
 
 #
-INFO "[RUNIT] Preparing /etc/service.d/ services log folders and loggers ..."
+DEBUG "[RUNIT] Preparing /etc/service.d/ services log folders and loggers ..."
 
 # Preparing services log folders and loggers
 if [ -n "$(ls -1 /etc/service.d)" ]; then

@@ -31,6 +31,10 @@ Based on [Alpine][alpine], this image included mandatory packages and tools for 
       <td>https://stedolan.github.io/jq</td>
     </tr>
     <tr>
+      <td><code>logrotate</code></td>
+      <td>https://github.com/logrotate/logrotate</td>
+    </tr>
+    <tr>
       <td><code>procps</code></td>
       <td>https://gitlab.com/procps-ng/procps</td>
     </tr>

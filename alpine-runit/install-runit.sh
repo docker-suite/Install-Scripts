@@ -7,7 +7,8 @@ set -e
 apk update
 
 # curl must be installed: https://curl.haxx.se/
-apk add --no-cache curl
+apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ \
+    curl
 
 # Download and run install-base script first and run it
 if [ ! -f /tmp/install-base.sh ]; then
@@ -30,7 +31,7 @@ fi
 [ "$(find /usr/local/bin -type f  | wc -l)" -gt "0" ] && chmod 0755 /usr/local/bin/*
 [ "$(find /usr/local/sbin -type f | wc -l)" -gt "0" ] && chmod 0755 /usr/local/sbin/*
 
-# Make entrypoint accessible and executable
+# Make entrypoints scripts accessible and executable
 chmod 0755 /etc/entrypoint.d/*.sh
 chmod 0755 -R /etc/runit/*
 chmod 0755 /entrypoint.sh
@@ -39,7 +40,5 @@ chmod 0755 /entrypoint.sh
 apk-install --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ \
         `# runit: http://smarden.org/runit/` \
         runit \
-        `# https://github.com/logrotate/logrotate` \
-        logrotate\
     && rm -f /sbin/runit \
     && rm -f /sbin/runit-init

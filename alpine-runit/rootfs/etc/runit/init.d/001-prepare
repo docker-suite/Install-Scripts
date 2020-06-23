@@ -16,14 +16,15 @@ source /usr/local/lib/bash-logger.sh
 source /usr/local/lib/persist-env.sh
 
 #
-INFO "[RUNIT] Creating /etc/service directory ..."
+DEBUG "[RUNIT] Creating /etc/service directory ..."
 
 # Create /etc/service directory
 rm -rf /etc/service 2>/dev/null
 mkdir -p /etc/service
+mkdir -p /etc/service.d
 
 #
-INFO "[RUNIT] Removing all directories in /etc/service.d without a run file ..."
+DEBUG "[RUNIT] Removing all directories in /etc/service.d without a run file ..."
 
 #
 if [ -n "$(ls -A /etc/service.d)" ]; then

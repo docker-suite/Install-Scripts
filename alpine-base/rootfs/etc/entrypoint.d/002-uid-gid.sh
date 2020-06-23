@@ -47,7 +47,6 @@ else
     fi
 fi
 
-
 ## Rename home location
 if [[  ! "$NEW_HOME" = "$DST_HOME"  ]] && [[ ! -d "$NEW_HOME" ]]; then
     DEBUG "Change home location '${NEW_USER}' to '${NEW_HOME}'"

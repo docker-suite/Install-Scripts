@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC1091
 
-# Create service.d folder if necessary
-mkdir -p /etc/service.d
+#
+# Enable cron by default
+#
 
-# Add more cron period
+## Add more cron period
 chmod 600 /etc/crontabs/root
+mkdir -p /etc/periodic/1min
 mkdir -p /etc/periodic/5min
 mkdir -p /etc/periodic/daily_1am
 mkdir -p /etc/periodic/daily_2am
@@ -49,3 +52,9 @@ mkdir -p /etc/periodic/monthly_september
 mkdir -p /etc/periodic/monthly_october
 mkdir -p /etc/periodic/monthly_november
 mkdir -p /etc/periodic/monthly_december
+
+# Make sure all sripts will execute as a cron task
+find /etc/periodic/*/* -type f -exec chmod 0755 {} \;
+
+# start crond
+/usr/sbin/crond -b -l 8 -L /dev/stdout

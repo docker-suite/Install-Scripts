@@ -1,0 +1,7 @@
+#!/bin/bash
+
+## This just prints "cron echo test" every minute, redirecting the echo output to process 1's stdout (file handle 1).
+## This line also redirects stderr, although that is not really necessary in the case of a simple echo.
+##
+## This works because docker always treats the stdout from process 1 as the docker log stream.
+echo "cron echo test 1" > /proc/1/fd/1 2>&1

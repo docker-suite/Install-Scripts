@@ -1,10 +1,14 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC2016
 
 ## Set default log level to INFO
 ## Do not output DEBUG and INFO level
 ## Except if DEBUG_LEVEL is defined
 env_set "DEBUG_LEVEL" "$(env_get "DEBUG_LEVEL" "NOTICE")"
 env_set "LOG_LEVEL" "$(LOG_LEVEL_VALUE "${DEBUG_LEVEL}")"
+
+## Don't log to file
+env_set "LOG_LOGFILE_ENABLE" "0"
 
 ## Define the log format which will be used in all dsuite images
 env_set "LOG_FORMAT" '%DATE %PID [%LEVEL] %MESSAGE'

@@ -27,6 +27,10 @@ file:
     filetype: file
     contains:
     - "exec tini --"
+  /etc/periodic/daily/logrotate:
+    exists: true
+    mode: "0755"
+    filetype: file
   /tmp/stdout.log:
     exists: true
     contains:
@@ -46,6 +50,8 @@ package:
   grep:
     installed: true
   jq:
+    installed: true
+  logrotate:
     installed: true
   procps:
     installed: true
