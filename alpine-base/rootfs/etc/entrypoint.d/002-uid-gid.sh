@@ -48,9 +48,9 @@ else
 fi
 
 ## Rename home location
-if [[  ! "$NEW_HOME" = "$DST_HOME"  ]] && [[ ! -d "$NEW_HOME" ]]; then
+if [[  ! "$NEW_HOME" = "$DST_HOME"  ]]; then
     DEBUG "Change home location '${NEW_USER}' to '${NEW_HOME}'"
-    usermod -d "$NEW_HOME" -m "$NEW_USER"
+    usermod -d "$NEW_HOME" -m "$NEW_USER" || true
 fi
 
 ## Change UID
