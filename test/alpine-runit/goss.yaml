@@ -94,7 +94,7 @@ package:
     installed: true
 
 command:
-  gpg-verify:
+  services:
     exit-status: 0
     exec: "runit -l"
     stdout:
