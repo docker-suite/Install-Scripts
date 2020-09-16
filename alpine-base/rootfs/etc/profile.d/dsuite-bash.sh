@@ -5,9 +5,9 @@ export LC_ALL=en_US.UTF-8
 
 # Aliases
 if [ -n "$BASH_VERSION" ]; then
-    alias ls='ls -p --color=always --group-directories-first'
-    alias l='ls -lp --color=always --group-directories-first'
-    alias ll='ls -alp --color=always --group-directories-first'
+    alias ls='ls --color=always --group-directories-first'
+    alias l='ls -l --color=always --group-directories-first'
+    alias ll='ls -al --color=always --group-directories-first'
     alias ..="cd .."
 fi
 
