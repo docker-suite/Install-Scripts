@@ -1,13 +1,7 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1091
 
-## logger
-source /usr/local/lib/bash-logger.sh
-
-## Persist env variables
-source /usr/local/lib/persist-env.sh
-
-# Make entrypoints scripts accessible and executable
+## Make entrypoints scripts accessible and executable
 [ -d /etc/entrypoint.d ] && find /etc/entrypoint.d -name '*.sh' -type f -exec chmod 0755 {} \;
 
 ## Make startup scripts accessible and executable
@@ -18,3 +12,9 @@ source /usr/local/lib/persist-env.sh
 ## Make bin and sbin files accessible and executable
 find /usr/local/bin -type f -exec chmod 0755 {} \;
 find /usr/local/sbin -type f -exec chmod 0755 {} \;
+
+## logger
+source /usr/local/lib/bash-logger.sh
+
+## Persist env variables
+source /usr/local/lib/persist-env.sh

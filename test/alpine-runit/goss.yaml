@@ -31,15 +31,19 @@ file:
     filetype: file
   /etc/runit/1:
     exists: true
+    mode: "0755"
     filetype: file
   /etc/runit/2:
     exists: true
+    mode: "0755"
     filetype: file
   /etc/runit/3:
     exists: true
+    mode: "0755"
     filetype: file
   /etc/runit/ctrlaltdel:
     exists: true
+    mode: "0755"
     filetype: file
   /etc/runit/logger:
     exists: true
@@ -48,8 +52,6 @@ file:
     exists: true
     mode: "0755"
     filetype: file
-    contains:
-    - "exec tini --"
   /etc/periodic/daily/logrotate:
     exists: true
     mode: "0755"

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2016
 
-## Set default log level to INFO
+## Set default log level to NOTICE
 ## Do not output DEBUG and INFO level
 ## Except if DEBUG_LEVEL is defined
 env_set "DEBUG_LEVEL" "$(env_get "DEBUG_LEVEL" "NOTICE")"

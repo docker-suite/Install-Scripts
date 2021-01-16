@@ -32,85 +32,60 @@ remove:  ## Remove images
 
 build-base:
 	@docker build --force-rm \
-		--build-arg http_proxy=${http_proxy} \
-		--build-arg https_proxy=${https_proxy} \
-		--build-arg no_proxy=${no_proxy} \
 		--file test/Dockerfile-base.test \
 		--tag $(DOCKER_BASE) \
 		$(DIR)
 
 build-runit:
-	@docker build \
-		--build-arg http_proxy=${http_proxy} \
-		--build-arg https_proxy=${https_proxy} \
-		--build-arg no_proxy=${no_proxy} \
+	@docker build --force-rm \
 		--file test/Dockerfile-runit.test \
 		--tag $(DOCKER_RUNIT) \
 		$(DIR)
 
 test-base:
-	@$(MAKE) build-base
 	@docker run -t --rm \
-		-e http_proxy=${http_proxy} \
-		-e https_proxy=${https_proxy} \
-		-e no_proxy=${no_proxy} \
 		-v $(DIR)/test/alpine-base:/goss \
 		-v /tmp:/tmp \
 		-v /var/run/docker.sock:/var/run/docker.sock \
 		dsuite/goss:latest \
-		dgoss run -e http_proxy=${http_proxy} -e https_proxy=${https_proxy} -e no_proxy=${no_proxy} --entrypoint=/goss/entrypoint.sh $(DOCKER_BASE)
+		dgoss run --entrypoint="/goss/entrypoint.sh" $(DOCKER_BASE)
 	@docker run -t --rm \
-		-e http_proxy=${http_proxy} \
-		-e https_proxy=${https_proxy} \
-		-e no_proxy=${no_proxy} \
 		-v $(DIR)/test/alpine-base:/goss \
 		-v /tmp:/tmp \
 		-v /var/run/docker.sock:/var/run/docker.sock \
 		dsuite/goss:latest \
-		dgoss run -e NEW_UID=1005 -e http_proxy=${http_proxy} -e https_proxy=${https_proxy} -e no_proxy=${no_proxy} --entrypoint=/goss/entrypoint.sh $(DOCKER_BASE)
+		dgoss run -e NEW_UID=1005 --entrypoint="/goss/entrypoint.sh" $(DOCKER_BASE)
 	@docker run -t --rm \
-		-e http_proxy=${http_proxy} \
-		-e https_proxy=${https_proxy} \
-		-e no_proxy=${no_proxy} \
 		-e GOSS_SLEEP=2 \
 		-v $(DIR)/test/alpine-base:/goss \
 		-v /tmp:/tmp \
 		-v /var/run/docker.sock:/var/run/docker.sock \
 		dsuite/goss:latest \
-		dgoss run -e BOOT_DELAY=0 -e NEW_GID=1005 -e http_proxy=${http_proxy} -e https_proxy=${https_proxy} -e no_proxy=${no_proxy} --entrypoint=/goss/entrypoint.sh $(DOCKER_BASE)
+		dgoss run -e BOOT_DELAY=0 -e NEW_GID=1005 --entrypoint="/goss/entrypoint.sh" $(DOCKER_BASE)
 
 test-runit:
-	@$(MAKE) build-runit
-	docker run -t --rm \
-		-e http_proxy=${http_proxy} \
-		-e https_proxy=${https_proxy} \
-		-e no_proxy=${no_proxy} \
+	@docker run -t --rm \
 		-v $(DIR)/test/alpine-runit:/goss \
 		-v /tmp:/tmp \
 		-v /var/run/docker.sock:/var/run/docker.sock \
 		dsuite/goss:latest \
-		dgoss run -e http_proxy=${http_proxy} -e https_proxy=${https_proxy} -e no_proxy=${no_proxy} --entrypoint=/goss/entrypoint.sh $(DOCKER_RUNIT)
-
+		dgoss run --entrypoint="/goss/entrypoint.sh" $(DOCKER_RUNIT)
 
 shell-base:
-	@$(MAKE) build-base
 	@docker run -it --rm \
-		-e http_proxy=${http_proxy} \
-		-e https_proxy=${https_proxy} \
-		-e no_proxy=${no_proxy} \
 		-e DEBUG_LEVEL=DEBUG \
+		-e NEW_USER=test \
+		-e USER=test \
 		--name base-test \
 		$(DOCKER_BASE) \
 		bash
 
 shell-runit:
-	@$(MAKE) build-runit
 	@docker run -it --rm \
-		-e http_proxy=${http_proxy} \
-		-e https_proxy=${https_proxy} \
-		-e no_proxy=${no_proxy} \
 		-e DEBUG_LEVEL=DEBUG \
 		-e MAIN_RESTART=1 \
+		-e NEW_USER=test \
+		-e USER=test \
 		--name runit-test \
 		$(DOCKER_RUNIT) \
 		bash

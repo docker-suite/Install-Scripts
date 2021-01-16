@@ -1,21 +1,24 @@
 #!/usr/bin/env bash
-
 # shellcheck disable=SC1091
 
 ## Add libraries
 source /usr/local/lib/uid-gid.sh
 
-## Envs
-env_set DST_USER "$(env_get "DST_USER" "dsuite")"
-env_set DST_UID "$(env_get "DST_UID" "1000")"
-env_set DST_GROUP "$(env_get "DST_GROUP" "dsuite")"
-env_set DST_GID "$(env_get "DST_GID" "1000")"
-env_set DST_HOME "$(env_get "DST_HOME" "/home/${DST_USER}")"
+## Default user: dsuite
+DST_USER="$(env_get "DST_USER" "dsuite")"
+DST_UID="$(env_get "DST_UID" "1000")"
+DST_GROUP="$(env_get "DST_GROUP" "dsuite")"
+DST_GID="$(env_get "DST_GID" "1000")"
+DST_HOME="$(env_get "DST_HOME" "/home/${DST_USER}")"
+
+## New user
 NEW_USER=$(env_get "NEW_USER" "$DST_USER")
 NEW_UID=$(env_get "NEW_UID" "$DST_UID")
 NEW_GROUP=$(env_get "NEW_GROUP" "$DST_GROUP")
 NEW_GID=$(env_get "NEW_GID" "$DST_GID")
 NEW_HOME=$(env_get "NEW_HOME" "$DST_HOME")
+
+## User which will be running the main process
 USER=$(env_get "USER")
 
 ## Create default group

@@ -2,13 +2,14 @@
 
 # set -e : Exit the script if any statement returns a non-true return value.
 set -e
-
-# Update repository indexes
-apk update
-
-# curl must be installed: https://curl.haxx.se/
-apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ \
-    curl
+# Update repository indexes and add packages
+apk update && apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ \
+        `# curl: https://curl.haxx.se/` \
+        curl \
+        `# runit: http://smarden.org/runit/` \
+        runit \
+    && rm -f /sbin/runit \
+    && rm -f /sbin/runit-init
 
 # Download and run install-base script first and run it
 if [ ! -f /tmp/install-base.sh ]; then
@@ -27,18 +28,5 @@ if [ -z "$1" ]; then
     fi
 fi
 
-# Make bin and sbin files accessible and executable
-[ "$(find /usr/local/bin -type f  | wc -l)" -gt "0" ] && chmod 0755 /usr/local/bin/*
-[ "$(find /usr/local/sbin -type f | wc -l)" -gt "0" ] && chmod 0755 /usr/local/sbin/*
-
 # Make entrypoints scripts accessible and executable
-chmod 0755 /etc/entrypoint.d/*.sh
-chmod 0755 -R /etc/runit/*
 chmod 0755 /entrypoint.sh
-
-# Add packages
-apk-install --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ \
-        `# runit: http://smarden.org/runit/` \
-        runit \
-    && rm -f /sbin/runit \
-    && rm -f /sbin/runit-init

@@ -2,6 +2,16 @@
 # shellcheck disable=SC1090
 
 ###
+### Only root user can run this
+###
+if [ ! "$(id -u)" = "0" ]; then
+    echo "Only root user can run this container"
+    echo "To use a specific user define the USER variable"
+    echo "For more information, visit https://github.com/docker-suite/alpine-base"
+    exit 1
+fi
+
+###
 ### Source libs in /etc/entrypoint.d
 ###
 for file in $( find /etc/entrypoint.d/ -name '*.sh' -type f | sort -u ); do
@@ -19,15 +29,12 @@ source_scripts "/startup.d"
 execute_scripts "/startup.1.d"
 execute_scripts "/startup.2.d"
 
-###
-### Execute only if arguments exist
-###
-if [ ! "$#" = "0" ]; then
-    ### Run with the correct user
-    if [ -n "$USER" ]; then
-        set -- su-exec "$USER" "$@"
-    fi
 
-    ### Execute script with arguments
-    exec tini -- "${@}"
+### Run with the correct user
+if [ -n "$USER" ]; then
+    DEBUG "Running as user $USER"
+    set -- su-exec "$USER" "$@"
 fi
+
+### Execute script with arguments
+exec "${@}"

@@ -3,7 +3,7 @@ FROM alpine
 ENV ALPINE_BASE=1
 
 ## Copy files
-COPY alpine-base/rootfs /
+COPY alpine-base/rootfs/entrypoint.sh /entrypoint.sh
 COPY alpine-base/install-base.sh /tmp/install-base.sh
 
 ## Install
@@ -15,12 +15,16 @@ RUN \
     # Run the install script
     && sh /tmp/install-base.sh local \
     # install packages
-    && apk-install gnupg \
+    && apk add --no-cache gnupg \
 	# Clear apk's cache
-	&& apk-cleanup
+	&& rm -rf /var/cache/apk/* /tmp/* /var/tmp/*
 
 ## Copy files
+COPY alpine-base/rootfs /
 COPY test/alpine-base/rootfs /
 
+# Make entrypoint executable
+RUN chmod 0755 entrypoint.sh
+
 ## Entrypoint
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["/entrypoint.sh", "tini", "--"]
