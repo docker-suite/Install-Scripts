@@ -12,5 +12,7 @@ echo "source /etc/profile" > /root/.bashrc
 ([[ -d "$(getent passwd "$USER" | cut -d: -f6)"  ]] && echo "source /etc/profile" > "$(getent passwd "$USER" | cut -d: -f6)/.ashrc") || true
 ([[ -d "$(getent passwd "$USER" | cut -d: -f6)"  ]] && echo "source /etc/profile" > "$(getent passwd "$USER" | cut -d: -f6)/.bashrc") || true
 
-## direct sourcing in case if the user do not have a home folder
-source /etc/profile
+## direct sourcing if the user do not have a home folder
+if [[ "$HOME" == "/" ]]; then
+    source /etc/profile
+fi
