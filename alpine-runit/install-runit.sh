@@ -28,5 +28,5 @@ if [ -z "$1" ]; then
     fi
 fi
 
-# Make entrypoints scripts accessible and executable
+# Make entrypoint script accessible and executable
 chmod 0755 /entrypoint.sh
