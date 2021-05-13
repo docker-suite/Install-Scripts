@@ -11,5 +11,5 @@ find /etc/runit/finish.d -name '*.sh' -type f -exec chmod 0755 {} \;
 
 # Give acces to the current user
 if [[ -n "$USER" ]]; then
-    chown -R "${NEW_USER}:${NEW_GROUP}" /etc/service.d
+    chown -R "${USER}" /etc/service.d
 fi

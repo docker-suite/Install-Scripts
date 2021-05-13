@@ -29,13 +29,13 @@ source_scripts "/startup.d"
 execute_scripts "/startup.1.d"
 execute_scripts "/startup.2.d"
 
-###
 ### Run with the correct user
-###
 if [ -n "$USER" ]; then
     DEBUG "Running as user $USER"
-    set -- su-exec "$USER" "$@"
+    set -- su-exec "$USER" runit "$@"
+else
+    set -- runit "$@"
 fi
 
 ### Execute script with arguments
-exec runit "${@}"
+exec "${@}"
