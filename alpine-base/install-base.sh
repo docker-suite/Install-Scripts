@@ -31,10 +31,10 @@ apk update && apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpi
     tini
 
 # Make sure folders exist
-mkdir -m 0555 -p /startup.d
-mkdir -m 0555 -p /startup.1.d
-mkdir -m 0555 -p /startup.2.d
-mkdir -m 0555 -p /etc/entrypoint.d
+mkdir -p /startup.d
+mkdir -p /startup.1.d
+mkdir -p /startup.2.d
+mkdir -p /etc/entrypoint.d
 mkdir -p /usr/local/bin
 mkdir -p /usr/local/lib
 mkdir -p /usr/local/sbin
@@ -56,9 +56,19 @@ if [ -z "$1" ]; then
     fi
 fi
 
-# Make bin and sbin files accessible and executable
+# Adjust folders permissions
+chmod -R 0660 /etc/entrypoint.d
+chmod -R 0660 /startup.d
+chmod -R 0770 /startup.1.d
+chmod -R 0770 /startup.2.d
+
+# Make sure binaries are accessible and executable
 [ "$(find /usr/local/bin -type f  | wc -l)" -gt "0" ] && chmod 0755 /usr/local/bin/*
 [ "$(find /usr/local/sbin -type f | wc -l)" -gt "0" ] && chmod 0755 /usr/local/sbin/*
 
-# Make entrypoints script accessible and executable
+# Adjust files permissions
+chmod 0600 /etc/crontabs/root
+chmod 0777 /etc/periodic/daily/logrotate
+
+# Make entrypoint script accessible and executable
 chmod 0755 /entrypoint.sh

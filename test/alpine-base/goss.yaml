@@ -1,4 +1,48 @@
 file:
+  /entrypoint.sh:
+    exists: true
+    mode: "0755"
+    filetype: file
+  /etc/crontabs/root:
+    exists: true
+    mode: "0600"
+    filetype: file
+  /etc/entrypoint.d:
+    exists: true
+    mode: "0660"
+    filetype: directory
+  /etc/logrotate.d:
+    exists: true
+    filetype: directory
+  /etc/periodic/daily/logrotate:
+    exists: true
+    mode: "0777"
+    filetype: file
+  /goss/docker_output.log:
+    exists: true
+    contains:
+    {{if getEnv "BOOT_DELAY" | eq ""}}
+    - "!Boot delayed"
+    {{else if getEnv "BOOT_DELAY" | eq "0"}}
+    - "!Boot delayed"
+    {{else}}
+    - "Boot delayed"
+    {{end}}
+    {{if getEnv "USER" | eq "1005:1005"}}
+    - "Running as user 1005:1005"
+    {{end}}
+  /startup.d:
+    exists: true
+    mode: "0660"
+    filetype: directory
+  /startup.1.d:
+    exists: true
+    mode: "0770"
+    filetype: directory
+  /startup.2.d:
+    exists: true
+    mode: "0770"
+    filetype: directory
   /usr/local/sbin/gh-downloader:
     exists: true
     mode: "0755"
@@ -21,30 +65,27 @@ file:
   /usr/local/lib/persist-env.sh:
     exists: true
     filetype: file
-  /entrypoint.sh:
+  {{if getEnv "ALPINE_BASE"}}
+  /etc/periodic/1min/echo_test:
     exists: true
-    mode: "0755"
     filetype: file
-  /etc/periodic/daily/logrotate:
+  /test/tini:
     exists: true
-    mode: "0755"
     filetype: file
-  /tmp/stdout.log:
+  /test/tini.asc:
     exists: true
-    contains:
-    {{if getEnv "BOOT_DELAY" | eq ""}}
-    - "!Boot delayed"
-    {{else if getEnv "BOOT_DELAY" | eq "0"}}
-    - "!Boot delayed"
-    {{else}}
-    - "Boot delayed"
-    {{end}}
+    filetype: file
+  {{end}}
 
 package:
   bash:
     installed: true
   curl:
     installed: true
+  {{if getEnv "ALPINE_BASE"}}
+  gnupg:
+    installed: true
+  {{end}}
   grep:
     installed: true
   jq:
@@ -62,38 +103,11 @@ package:
   tini:
     installed: true
 
-{{if getEnv "ALPINE_BASE"}}
 command:
+  {{if getEnv "ALPINE_BASE"}}
   gpg-verify:
     exit-status: 0
-    exec: "GPG_KEYS=595E85A6B1B4779EA4DAAEC70B588DFF0527A9B7 gpg-verify /tmp/tini.asc /tmp/tini"
+    exec: "GPG_KEYS=595E85A6B1B4779EA4DAAEC70B588DFF0527A9B7 gpg-verify /test/tini.asc /test/tini"
     stderr: []
     skip: false
-{{end}}
-
-group:
-  dsuite:
-    exists: true
-    {{if getEnv "NEW_GID" | eq "1005"}}
-    gid: 1005
-    {{else}}
-    gid: 1000
-    {{end}}
-    skip: false
-
-user:
-  dsuite:
-    exists: true
-    {{if getEnv "NEW_UID" | eq "1005"}}
-    uid: 1005
-    {{else}}
-    uid: 1000
-    {{end}}
-    {{if getEnv "NEW_GID" | eq "1005"}}
-    gid: 1005
-    {{else}}
-    gid: 1000
-    {{end}}
-    groups:
-    - dsuite
-    skip: false
+  {{end}}

@@ -2,8 +2,11 @@ FROM alpine
 
 ENV ALPINE_BASE=1
 
+## Copy folders
+COPY alpine-base/rootfs /
+COPY test/alpine-base/rootfs /
+
 ## Copy files
-COPY alpine-base/rootfs/entrypoint.sh /entrypoint.sh
 COPY alpine-base/install-base.sh /tmp/install-base.sh
 
 ## Install
@@ -19,12 +22,5 @@ RUN \
 	# Clear apk's cache
 	&& rm -rf /var/cache/apk/* /tmp/* /var/tmp/*
 
-## Copy files
-COPY alpine-base/rootfs /
-COPY test/alpine-base/rootfs /
-
-# Make entrypoint executable
-RUN chmod 0755 entrypoint.sh
-
 ## Entrypoint
-ENTRYPOINT ["/entrypoint.sh", "tini", "--"]
+ENTRYPOINT ["/entrypoint.sh"]
