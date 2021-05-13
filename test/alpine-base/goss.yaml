@@ -28,8 +28,8 @@ file:
     {{else}}
     - "Boot delayed"
     {{end}}
-    {{if getEnv "USER" | eq "1005:1005"}}
-    - "Running as user 1005:1005"
+    {{if getEnv "USER" | eq "test:test"}}
+    - "Running as user test:test"
     {{end}}
   /startup.d:
     exists: true
@@ -111,3 +111,18 @@ command:
     stderr: []
     skip: false
   {{end}}
+
+group:
+  test:
+    exists: true
+    gid: 1005
+    skip: false
+
+user:
+  test:
+    exists: true
+    uid: 1005
+    gid: 1005
+    groups:
+    - test
+    skip: false

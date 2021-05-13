@@ -9,6 +9,11 @@ COPY test/alpine-base/rootfs /
 ## Copy files
 COPY alpine-base/install-base.sh /tmp/install-base.sh
 
+## Add test user
+RUN \
+    addgroup -S -g "1005" "test" \
+    && adduser -S -D -u "1005" -G "test" -h "/home/test" -s /bin/bash "test"
+
 ## Install
 RUN \
 	# Print executed commands
