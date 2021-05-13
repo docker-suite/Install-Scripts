@@ -43,38 +43,22 @@ build-runit:
 		$(DIR)
 
 test-base:
-	@docker run -t --rm \
-		-v $(DIR)/test/alpine-base:/goss \
-		-v /tmp:/tmp \
-		-v /var/run/docker.sock:/var/run/docker.sock \
-		dsuite/goss:latest \
-		dgoss run --entrypoint="/goss/entrypoint.sh" $(DOCKER_BASE)
-	@docker run -t --rm \
-		-v $(DIR)/test/alpine-base:/goss \
-		-v /tmp:/tmp \
-		-v /var/run/docker.sock:/var/run/docker.sock \
-		dsuite/goss:latest \
-		dgoss run -e NEW_UID=1005 --entrypoint="/goss/entrypoint.sh" $(DOCKER_BASE)
-	@docker run -t --rm \
-		-e GOSS_SLEEP=2 \
-		-v $(DIR)/test/alpine-base:/goss \
-		-v /tmp:/tmp \
-		-v /var/run/docker.sock:/var/run/docker.sock \
-		dsuite/goss:latest \
-		dgoss run -e BOOT_DELAY=0 -e NEW_GID=1005 --entrypoint="/goss/entrypoint.sh" $(DOCKER_BASE)
+	GOSS_FILES_PATH=$(DIR)/test/alpine-base \
+	 	dgoss run $(DOCKER_BASE) bash -c "sleep 60"
+	GOSS_FILES_PATH=$(DIR)/test/alpine-base \
+	 	dgoss run -e DEBUG_LEVEL=DEBUG -e USER=test $(DOCKER_BASE) bash -c "sleep 60"
+	GOSS_FILES_PATH=$(DIR)/test/alpine-base \
+	 	dgoss run -e DEBUG_LEVEL=DEBUG -e BOOT_DELAY=1 $(DOCKER_BASE) bash -c "sleep 60"
 
 test-runit:
-	@docker run -t --rm \
-		-v $(DIR)/test/alpine-runit:/goss \
-		-v /tmp:/tmp \
-		-v /var/run/docker.sock:/var/run/docker.sock \
-		dsuite/goss:latest \
-		dgoss run --entrypoint="/goss/entrypoint.sh" $(DOCKER_RUNIT)
+	GOSS_FILES_PATH=$(DIR)/test/alpine-base \
+	 	dgoss run $(DOCKER_RUNIT)
+	GOSS_FILES_PATH=$(DIR)/test/alpine-runit \
+	 	dgoss run $(DOCKER_RUNIT)
 
 shell-base:
 	@docker run -it --rm \
 		-e DEBUG_LEVEL=DEBUG \
-		-e NEW_USER=test \
 		-e USER=test \
 		--name base-test \
 		$(DOCKER_BASE) \
@@ -84,7 +68,6 @@ shell-runit:
 	@docker run -it --rm \
 		-e DEBUG_LEVEL=DEBUG \
 		-e MAIN_RESTART=1 \
-		-e NEW_USER=test \
 		-e USER=test \
 		--name runit-test \
 		$(DOCKER_RUNIT) \

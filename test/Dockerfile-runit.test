@@ -2,10 +2,19 @@ FROM alpine
 
 ENV ALPINE_RUNIT=1
 
+## Copy folders
+COPY alpine-base/rootfs /
+COPY alpine-runit/rootfs /
+COPY test/alpine-runit/rootfs /
+
 ## Copy files
 COPY alpine-base/install-base.sh /tmp/install-base.sh
-COPY alpine-runit/rootfs/entrypoint.sh /entrypoint.sh
 COPY alpine-runit/install-runit.sh /tmp/install-runit.sh
+
+## Add test user
+RUN \
+    addgroup -S -g "1005" "test" \
+    && adduser -S -D -u "1005" -G "test" -h "/home/test" -s /bin/bash "test"
 
 ## Install
 RUN \
@@ -18,13 +27,8 @@ RUN \
 	# Clear apk's cache
 	&& rm -rf /var/cache/apk/* /tmp/* /var/tmp/*
 
-## Examples
-COPY alpine-base/rootfs /
-COPY alpine-runit/rootfs /
-COPY test/alpine-runit/rootfs /
-
-# Make entrypoint executable
-RUN chmod 0755 entrypoint.sh
-
 ## Entrypoint
-ENTRYPOINT ["/entrypoint.sh", "tini", "--"]
+ENTRYPOINT ["/entrypoint.sh"]
+
+## Start runit
+CMD ["start"]

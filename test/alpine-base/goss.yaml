@@ -28,8 +28,8 @@ file:
     {{else}}
     - "Boot delayed"
     {{end}}
-    {{if getEnv "USER" | eq "test:test"}}
-    - "Running as user test:test"
+    {{if getEnv "USER" | eq "test"}}
+    - "Running as user test"
     {{end}}
   /startup.d:
     exists: true
