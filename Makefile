@@ -43,17 +43,17 @@ build-runit:
 		$(DIR)
 
 test-base:
-	GOSS_FILES_PATH=$(DIR)/test/alpine-base \
+	@GOSS_FILES_PATH=$(DIR)/test/alpine-base \
 	 	dgoss run $(DOCKER_BASE) bash -c "sleep 60"
-	GOSS_FILES_PATH=$(DIR)/test/alpine-base \
+	@GOSS_FILES_PATH=$(DIR)/test/alpine-base \
 	 	dgoss run -e DEBUG_LEVEL=DEBUG -e USER=test $(DOCKER_BASE) bash -c "sleep 60"
-	GOSS_FILES_PATH=$(DIR)/test/alpine-base \
+	@GOSS_FILES_PATH=$(DIR)/test/alpine-base \
 	 	dgoss run -e DEBUG_LEVEL=DEBUG -e BOOT_DELAY=1 $(DOCKER_BASE) bash -c "sleep 60"
 
 test-runit:
-	GOSS_FILES_PATH=$(DIR)/test/alpine-base \
+	@GOSS_FILES_PATH=$(DIR)/test/alpine-base \
 	 	dgoss run $(DOCKER_RUNIT)
-	GOSS_FILES_PATH=$(DIR)/test/alpine-runit \
+	@GOSS_FILES_PATH=$(DIR)/test/alpine-runit \
 	 	dgoss run $(DOCKER_RUNIT)
 
 shell-base:
