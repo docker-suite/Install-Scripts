@@ -44,6 +44,7 @@ curl -s -o /usr/local/sbin/gh-downloader https://raw.githubusercontent.com/bash-
 curl -s -o /usr/local/sbin/templater https://raw.githubusercontent.com/bash-suite/templater/master/templater.sh
 curl -s -o /usr/local/sbin/wait-host https://raw.githubusercontent.com/bash-suite/wait-host/master/wait-host.sh
 curl -s -o /usr/local/sbin/mvlink https://raw.githubusercontent.com/bash-suite/mvlink/master/mvlink.sh
+curl -s -o /usr/local/sbin/semver https://raw.githubusercontent.com/fsaintjacques/semver-tool/master/src/semver
 curl -s -o /usr/local/lib/bash-logger.sh https://raw.githubusercontent.com/bash-suite/bash-logger/master/bash-logger.sh
 curl -s -o /usr/local/lib/persist-env.sh https://raw.githubusercontent.com/bash-suite/persist-env/master/persist-env.sh
 

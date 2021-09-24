@@ -102,6 +102,10 @@ Cron is enable by default.
    <td><a href="https://github.com/bash-suite/mvlink" >Move ORIGIN (file or folder) to DEST and create a symbolic ORIGIN to DEST</a></td>
   </tr>
   <tr>
+   <td><code>/usr/local/sbin/semver</code></td>
+   <td><a href="https://github.com/fsaintjacques/semver-tool" >The semver shell utility</a></td>
+  </tr>
+  <tr>
    <td><code>/usr/local/lib/bash-logger.sh</code></td>
    <td><a href="https://github.com/bash-suite/bash-logger" >Bash Logger designed to incorporate PSR-3 compliance</a></td>
   </tr>
