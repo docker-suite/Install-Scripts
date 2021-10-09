@@ -31,13 +31,13 @@ remove:  ## Remove images
 	@$(MAKE) remove-runit
 
 build-base:
-	@docker build --force-rm \
+	@docker build \
 		--file test/Dockerfile-base.test \
 		--tag $(DOCKER_BASE) \
 		$(DIR)
 
 build-runit:
-	@docker build --force-rm \
+	@docker build \
 		--file test/Dockerfile-runit.test \
 		--tag $(DOCKER_RUNIT) \
 		$(DIR)
@@ -59,7 +59,7 @@ test-runit:
 shell-base:
 	@docker run -it --rm \
 		-e DEBUG_LEVEL=DEBUG \
-		-e USER=test \
+		-u 1000 \
 		--name base-test \
 		$(DOCKER_BASE) \
 		bash
